@@ -108,7 +108,10 @@ def main() -> None:
         print("# Multiple snippets found, pick one:")
         for i, module in enumerate(modules, start=1):
             print(f"#    {i}) {describe(module)}")
-        choice = input("# > ").strip()
+        try:
+            choice = input("# > ").strip()
+        except (EOFError, KeyboardInterrupt):  # e.g. Ctrl+D or Ctrl+C
+            sys.exit("\n# No choice made")
         if not choice.isdigit() or not 1 <= int(choice) <= len(modules):
             sys.exit(f"# Invalid choice: {choice!r}")
         run(modules[int(choice) - 1], snippet_args)
