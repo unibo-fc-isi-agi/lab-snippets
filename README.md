@@ -56,7 +56,8 @@ Exercises build upon the examples (and exercises) listed before them, as detaile
 | 3 | [Prompt Engineering & Structured Outputs](https://unibo-fc-isi-agi.github.io/slides-module2/prompting/) (`prompting`) | example 1, example 1bis, exercise 1, example 2, example 3, exercise 2, example 4 | exercise 1 extends example 1bis |
 | 4 | [Validating Generative Software](https://unibo-fc-isi-agi.github.io/slides-module2/validating/) (`validating`) | example 1, example 1bis, exercise 1, exercise 2 | exercise 1 extends example 1 (or 1bis); exercise 2 tests the solution of `prompting` exercise 2 |
 | 5 | [Tools and Agents](https://unibo-fc-isi-agi.github.io/slides-module2/agents/) (`agents`) | example 1, example 1bis, example 2, example 3, exercise 1, exercise 2, exercise 3 | exercise 1 reuses `prompting` exercise 2 (pictures) and, optionally, `prompting` example 1 or 1bis (letter scoring); exercise 2 extends exercise 1; exercise 3 extends exercises 1 and 2 |
-| 6–8 | _RAG, Agentic Skills, Workflows and Agent Orchestration_ | _coming soon_ | |
+| 6 | [Retrieval-Augmented Generation](https://unibo-fc-isi-agi.github.io/slides-module2/rag/) (`rag`) | example 1, example 2, example 2bis, example 3, example 4, example 4bis, example 5, exercise 1 | needs an embedding model (see below), and a Python whose `sqlite3` can load extensions (for `sqlite-vec`); exercise 1 (Q/A over the slides' PDFs) reuses `embeddings.py` and `vec.py` |
+| 7–8 | _Agentic Skills, Workflows and Agent Orchestration_ | _coming soon_ | |
 | 9 | [AI Governance 101](https://unibo-fc-isi-agi.github.io/slides-module2/governance/) (`governance`) | exercise 1, exercise 2 | exercise 1 runs `prompting` example 1 (or 1bis) with several models; exercise 2 builds on exercise 1 |
 
 ## Prepare the environment
@@ -88,6 +89,15 @@ and they are configured via environment variables:
 - `OPENAI_BASE_URL`: the API's URL (default: `https://openrouter.ai/api/v1/`)
 - `OPENAI_API_KEY`: your API key (if missing, it is asked interactively)
 - `OPENAI_MODEL`: the model to use (default: `openrouter/auto`)
+
+The snippets of the `rag` lecture also need an _embedding_ model, configured via:
+- `EMBEDDINGS_BASE_URL`: the API's URL (default: `http://localhost:11434/v1`, i.e. a local [Ollama](https://ollama.com) server)
+- `EMBEDDINGS_API_KEY`: the API key (default: `ollama`, which Ollama ignores)
+- `EMBEDDINGS_MODEL`: the model to use (default: `nomic-embed-text`, to be installed via `ollama pull nomic-embed-text`)
+
+They also use [`sqlite-vec`](https://alexgarcia.xyz/sqlite-vec/), a SQLite extension,
+which some Python builds cannot load (e.g. macOS' system Python, and some `pyenv` builds):
+if so, re-create the virtual environment with another Python (e.g. from Homebrew or python.org), via `poetry env use <PYTHON>`.
 
 See the slides for how to get free access to LLMs, or to run them locally (e.g. via [Ollama](https://ollama.com)).
 

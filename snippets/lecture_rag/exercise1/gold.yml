@@ -1,0 +1,42 @@
+# Gold set for evaluating retrieval: questions about the course, each with the slides that answer it.
+# Slides are identified by (lecture, title), NOT by page number: pages shift whenever a slide is added to a lecture.
+# Titles are copied verbatim from the PDFs of release TAG (incl. typographic quotes and apostrophes); any of them counts as a hit.
+# Questions avoid the very words of the titles, otherwise retrieval would be too easy to be informative.
+tag: "2026.10.08"
+questions:
+  - question: How can I reduce the memory needed to run an LLM on my laptop?
+    lecture: llmaas
+    titles: ["Quantization (pt. 1): the concept", "Running models locally: what does it take? (pt. 1)", "Running models locally: what does it take? (pt. 2)"]
+  - question: What does the Q4_K_M suffix in the name of a model mean?
+    lecture: llmaas
+    titles: ["Decoding GGUF quantization labels (as seen in Ollama’s tags)"]
+  - question: How does an agent alternate between thinking and calling tools?
+    lecture: agents
+    titles: ["The ReAct loop: the general concept"]
+  - question: Are LLMs able to plan on their own?
+    lecture: agents
+    titles: ["Can LLM agents plan?", "LLMs can’t plan, but can help planning: LLM-Modulo"]
+  - question: How can an agent be protected from malicious instructions hidden in the documents it reads?
+    lecture: agents
+    titles: ["Prompt injection", "Mitigations"]
+  - question: What is a standard way to share tools among different agents and applications?
+    lecture: agents
+    titles: ["The Model Context Protocol (MCP): the general concept"]
+  - question: How can an LLM grade the outputs of another LLM?
+    lecture: validating
+    titles: ["LLM-as-a-Judge"]
+  - question: Which obligations does the European regulation on AI impose on those who deploy high-risk systems?
+    lecture: governance
+    titles: ["EU AI Act: who must do what?"]
+  - question: When can an AI model be called open source?
+    lecture: governance
+    titles: ["The OSI Open Source AI Definition (OSAID 1.0, Oct. 2024)", "What makes a model “open”? The general concept", "Openness is graded, not binary"]
+  - question: In which cases is it worth paying for a model that thinks before answering?
+    lecture: prompting
+    titles: ["Reasoning models: when and how to use them?"]
+  - question: What can be done when a long conversation no longer fits in the model's context?
+    lecture: prompting
+    titles: ["Context management: the general concept", "Example 4: CLI Chat with Context Compaction (pt. 1)"]
+  - question: Which providers let me call LLMs without paying?
+    lecture: free-access
+    titles: ["Free APIs you can use today"]

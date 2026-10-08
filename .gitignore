@@ -147,3 +147,4 @@ mlflow.db
 .deepeval/
 output/
 .llm-cache/
+.rag-cache/
