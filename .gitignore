@@ -145,4 +145,5 @@ dmypy.json
 mlruns/
 mlflow.db
 .deepeval/
-outbox/
+output/
+.llm-cache/

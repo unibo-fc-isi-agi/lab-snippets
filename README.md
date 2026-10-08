@@ -7,6 +7,17 @@ part of the Master's degree in Computer Science and Engineering.
 Slides are available at <https://unibo-fc-isi-agi.github.io/slides-module2>.
 Each snippet corresponds to an example (or exercise) in the slides, with the same index.
 
+## Branches: exercises vs. solutions
+
+| Branch | Contents | Who |
+|--------|----------|-----|
+| [`exercises`](https://github.com/unibo-fc-isi-agi/lab-snippets/tree/exercises) | examples, plus a placeholder (with a TODO list) for each exercise | __students__: clone this one, and put your solutions in the placeholders |
+| [`master`](https://github.com/unibo-fc-isi-agi/lab-snippets/tree/master) | examples, plus the (commented) __solutions__ of exercises, tested by CI | for checking your solution _after_ trying, and for the walkthroughs in the slides |
+
+```bash
+git clone -b exercises https://github.com/unibo-fc-isi-agi/lab-snippets.git
+```
+
 Most snippets work on the course's __running example__: an assistant for the admission committee of a PhD programme,
 which has to assess the applications of some candidates (recommendation letter, passport, transcript of records).
 
@@ -15,6 +26,7 @@ which has to assess the applications of some candidates (recommendation letter, 
 ```
 <root directory>
 ├── data/                                  # the running example's data, plus helpers to locate files (data/__init__.py)
+├── tests/                                 # offline tests of the exercises' solutions (master only)
 └── snippets/
     ├── __init__.py                        # utilities shared across lectures
     ├── __main__.py                        # the runner (see below)
@@ -22,7 +34,7 @@ which has to assess the applications of some candidates (recommendation letter, 
         ├── <UTILITY>.py                   # utilities shared by the snippets of the lecture
         ├── example<ID>/
         │   └── <DESCRIPTION>.py
-        └── exercise<ID>/                  # placeholder: put your solution here!
+        └── exercise<ID>/                  # placeholder: put your solution here! (solution, on master)
 ```
 
 where

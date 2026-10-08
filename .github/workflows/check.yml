@@ -36,3 +36,6 @@ jobs:
         run: poetry run poe collect
         env:
           OPENAI_API_KEY: dummy  # no LLM is called: tests are only collected
+
+      - name: Test the solutions of exercises (offline)
+        run: poetry run poe test
