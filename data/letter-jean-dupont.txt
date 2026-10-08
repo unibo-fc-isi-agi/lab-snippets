@@ -1,0 +1,50 @@
+Professeure Claire Moreau
+Maîtresse de conférences en informatique
+Département d’Informatique
+Université de Lyon
+claire.moreau@example.fr
+
+12 February 2013
+
+Admissions Committee
+PhD Programme in Artificial Intelligence
+
+Subject: Recommendation letter for Mr. Jean Dupont
+
+Dear Members of the Admissions Committee,
+
+I am writing in support of Mr. Jean Dupont’s application to your PhD Programme in Artificial Intelligence.
+
+I first met Mr. Dupont during his Master’s studies in Informatique at the Université de Lyon, where I taught the course “Apprentissage automatique” and later interacted with him in the context of the research-oriented module “Vision par ordinateur”. 
+These experiences gave me several opportunities to observe his technical work, his classroom participation, and his approach to independent study.
+
+Mr. Dupont has a clear interest in Artificial Intelligence, particularly in machine learning and computer vision. 
+He completed coursework involving supervised learning, classification methods, dimensionality reduction, and basic experimental evaluation. 
+His Master’s thesis, titled “Classification d’images à grande échelle avec des SVM noyau et techniques de réduction de dimension”, was aligned with active research topics of the period and showed his ability to engage with relevant literature when given sufficient structure and direction.
+
+From a technical perspective, Mr. Dupont is capable of producing correct work on well-defined problems. 
+He can implement standard algorithms, follow established experimental protocols, and interpret results at a practical level. 
+In laboratory sessions, he was generally able to complete the required assignments and demonstrated familiarity with common programming tools used in data analysis and machine learning.
+
+Mr. Dupont also has interpersonal qualities that may be useful in a doctoral environment. 
+He is polite, reserved, and usually receptive to feedback when it is presented explicitly. 
+He tends to work best in contexts where expectations, milestones, and evaluation criteria are clearly specified. In such settings, he can be dependable and focused.
+
+At the same time, I believe it is important to give a balanced assessment. Mr. Dupont’s strongest contributions emerged when the research question was already well framed. 
+He was less comfortable when asked to define a problem independently, challenge assumptions, or propose alternative methodological directions. 
+His written work was careful in presentation, although sometimes more descriptive than analytical. 
+In discussions, he could explain implemented methods, but he was not always quick to identify their deeper limitations or broader implications.
+
+For a PhD programme, these observations should not be interpreted as a lack of potential, but rather as an indication of the type of supervision under which Mr. Dupont is likely to perform best. 
+He would benefit from a structured research group, regular feedback, and a project with a clearly articulated technical agenda. 
+Under those conditions, I believe he could make a useful contribution to applied work in Artificial Intelligence, especially in areas involving implementation, evaluation, and empirical comparison of existing methods.
+
+In summary, I can recommend Mr. Jean Dupont as a serious and technically competent candidate with a sincere interest in Artificial Intelligence. 
+His profile is best suited to a doctoral environment that values careful execution, methodological discipline, and close supervision.
+
+Sincerely,
+
+Professeure Claire Moreau  
+Maîtresse de conférences en informatique  
+Département d’Informatique  
+Université de Lyon

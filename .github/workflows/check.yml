@@ -1,0 +1,38 @@
+name: CI
+on:
+  push:
+    paths-ignore:
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+  pull_request:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: Preliminary Checks
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: pip install -r requirements.txt
+
+      - name: Restore Development Environment
+        run: poetry install
+
+      - name: Check code is syntactically correct
+        run: poetry run poe compile
+
+      - name: Check snippets are discoverable
+        run: poetry run poe list
+
+      - name: Check test snippets are importable
+        run: poetry run poe collect
+        env:
+          OPENAI_API_KEY: dummy  # no LLM is called: tests are only collected

@@ -1,0 +1,26 @@
+# Test dataset, designed by humans (the committee) BEFORE testing: known inputs (the letters), each with the results expected from a correct scoring.
+# Some expectations are checked exactly (names, emails), some with tolerance (score ranges), some by an LLM-as-a-judge (descriptions).
+- input: letter-mario-rossi.txt
+  expectations:
+    applicant_name: Mario Rossi                      # exact match
+    author_name: Alessandro Bianchi                  # exact match
+    author_email: alessandro.bianchi@example.edu     # exact match
+    min_score: 4                                     # range
+    relationship_with_applicant: >-                  # LLM-as-a-judge
+      taught the applicant a Master's course (Machine Learning and Data Mining), then supervised their Master's thesis
+- input: letter-jean-dupont.txt
+  expectations:
+    applicant_name: Jean Dupont
+    author_name: Claire Moreau
+    author_email: claire.moreau@example.fr
+    max_score: 4
+    relationship_with_applicant: >-
+      taught the applicant a Master's course (Apprentissage automatique), then interacted with them in a research-oriented module
+- input: letter-mohammed-ali.txt
+  expectations:
+    applicant_name: Mohammed Ali
+    author_name: Kareem Al-Haddad
+    author_email: k.alhaddad@example.edu.jo
+    max_score: 3
+    relationship_with_applicant: >-
+      knew the applicant as one of the students of the Software Engineering programme, without supervising their final project

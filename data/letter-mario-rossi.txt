@@ -1,0 +1,45 @@
+Prof. Alessandro Bianchi
+Associate Professor of Computer Science
+Department of Computer Science and Engineering
+University of Bologna
+alessandro.bianchi@example.edu
+
+15 March 2013
+
+Admissions Committee
+PhD Programme in Data Science
+
+Subject: Recommendation letter for Mr. Mario Rossi
+
+Dear Members of the Admissions Committee,
+
+I am pleased to recommend Mr. Mario Rossi for admission to your PhD programme in Data Science.
+
+I met Mr. Rossi during his Master’s studies in Computer Science and Engineering, where I taught the course “Machine Learning and Data Mining” and later supervised him during his thesis work. 
+His thesis, titled “Scalable Methods for Predictive Analytics on Large-Scale Web Data”, addressed a topic of clear relevance at the time, combining machine learning, statistical modelling, and large-scale data processing.
+
+My opinion of Mr. Rossi is based on his performance in coursework, his participation in laboratory activities, and several technical discussions during the development of his thesis. 
+Across these contexts, he showed strong analytical ability, intellectual discipline, and an unusual capacity to connect theoretical material with implementation choices.
+
+From a technical perspective, Mr. Rossi has solid foundations in algorithms, probability, statistics, machine learning, and database systems. 
+He is comfortable with programming and experimental evaluation, and he showed particular strength in designing reproducible computational experiments. 
+During his thesis work, he implemented data preprocessing pipelines, trained predictive models, and evaluated them using appropriate validation procedures. 
+He was also careful in discussing the limitations of his results rather than overstating them, which I consider an important quality for doctoral research.
+
+Mr. Rossi also demonstrated relevant soft skills. 
+He works independently, manages deadlines reliably, and communicates technical ideas with clarity. 
+In group laboratory sessions, he was constructive and precise, often helping colleagues debug implementation issues without taking over their work. 
+He is not merely diligent; he is methodical, critical, and capable of sustained work on open-ended problems.
+
+In my assessment, Mr. Rossi has the academic maturity required for doctoral study in Data Science. 
+His background in machine learning, software systems, and data management gives him a suitable basis for research involving modern data-intensive methods. 
+I believe he would contribute positively to a PhD cohort and would be able to develop into an independent researcher.
+
+I therefore recommend Mr. Mario Rossi for admission to your PhD programme in Data Science.
+
+Sincerely,
+
+Prof. Alessandro Bianchi
+Associate Professor of Computer Science
+Department of Computer Science and Engineering
+University of Bologna

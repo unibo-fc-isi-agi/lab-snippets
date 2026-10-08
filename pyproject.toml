@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "lab-snippets"
+packages = [
+    { include = "snippets" },
+    { include = "data" },
+]
+version = "0.1.0"
+description = "Code snippets for the course 'Intelligent Agents -- Module 2' at the University of Bologna"
+authors = ["Giovanni Ciatto <giovanni.ciatto@unibo.it>"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">= 3.10.0, < 4.0.0"
+openai = "^3.26.1"
+anthropic = "^1.12.1"
+pydantic = "^2.13.5"
+langchain = "^1.4.3"
+langchain-openai = "^1.6.7"
+langchain-mcp-adapters = "^0.3.2"
+mcp = "^1.24"
+ddgs = "^9.16.0"
+pyyaml = "^6.0.3"
+pytest = "^9.1.1"
+deepeval = "^4.2.8"
+mlflow = "^3.17.0"
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "*"
+
+[tool.poe.tasks]
+compile = "python -m compileall -q snippets data"
+list = "python -m snippets --list"
+collect = "pytest --collect-only -q snippets"  # imports the test snippets, without running them
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
