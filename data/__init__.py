@@ -9,6 +9,7 @@ Use the helpers below to locate files, rather than hard-coding their paths, e.g.
     data.letter("mario-rossi").read_text()  # the text of Mario Rossi's letter
     data.passport("jean-dupont")            # the path of Jean Dupont's passport picture
     data.find_letter(sys.argv[1])           # a letter, given either a candidate's ID or a path
+    data.regulations().read_text()          # the (fictional) regulations of the PhD programme, in Markdown
 """
 from pathlib import Path
 
@@ -31,6 +32,11 @@ def passport(candidate: str) -> Path:
 def transcript(candidate: str) -> Path:
     """Path of the picture of the candidate's transcript of records, e.g. data/transcript-mario-rossi.png."""
     return DIR / f"transcript-{candidate}.png"
+
+
+def regulations() -> Path:
+    """Path of the (fictional) regulations of the PhD programme, i.e. data/regulations-phd.md, one article per section."""
+    return DIR / "regulations-phd.md"
 
 
 def letters() -> list[Path]:

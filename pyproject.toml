@@ -24,6 +24,9 @@ pyyaml = "^6.0.3"
 pytest = "^9.1.1"
 deepeval = "^4.2.8"
 mlflow = "^3.17.0"
+sqlite-vec = "^0.1.9"
+langchain-community = "^0.4.2"
+pypdf = "^6.19.0"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "*"
