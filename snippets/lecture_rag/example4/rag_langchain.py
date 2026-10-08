@@ -8,6 +8,7 @@ Run with: poetry run python -m snippets -l rag -e 4 "QUESTION"
 e.g.: poetry run python -m snippets -l rag -e 4 "Which English certificates are accepted, and with which minimum scores?"
 Configure via env vars: OPENAI_BASE_URL, OPENAI_API_KEY, OPENAI_MODEL, plus EMBEDDINGS_BASE_URL, EMBEDDINGS_API_KEY, EMBEDDINGS_MODEL.
 """
+import functools
 import os
 from pathlib import Path
 from langchain_community.vectorstores import SQLiteVec
@@ -23,19 +24,20 @@ api_key = os.environ.get("OPENAI_API_KEY") or input(f"Enter your API key for {ba
 model = os.environ.get("OPENAI_MODEL", "openrouter/auto")
 
 llm = ChatOpenAI(base_url=base_url, api_key=api_key, model=model)
+DB_FILE = Path("output/rag-example4.db")
 
 
 # indexing (once): chunks become LangChain Documents, i.e. text + metadata, embedded and stored by the vector store
-DB_FILE = Path("output/rag-example4.db")
-if DB_FILE.exists():
-    store = SQLiteVec(table="chunks", connection=None, embedding=langchain_embeddings(), db_file=str(DB_FILE))
-else:
-    DB_FILE.parent.mkdir(exist_ok=True)
-    documents = [Document(page_content=c.text, metadata=dict(id=c.id, source=c.source, candidate=c.candidate, section=c.section))
-                 for c in chunks()]
-    store = SQLiteVec.from_documents(documents, langchain_embeddings(), table="chunks", db_file=str(DB_FILE))
-
-retriever = store.as_retriever(search_kwargs=dict(k=4))  # the 4 most similar chunks to the question
+@functools.cache  # upon first use, not upon import (e.g. by tests)
+def retriever():
+    if DB_FILE.exists():
+        store = SQLiteVec(table="chunks", connection=None, embedding=langchain_embeddings(), db_file=str(DB_FILE))
+    else:
+        DB_FILE.parent.mkdir(exist_ok=True)
+        documents = [Document(page_content=c.text, metadata=dict(id=c.id, source=c.source, candidate=c.candidate, section=c.section))
+                     for c in chunks()]
+        store = SQLiteVec.from_documents(documents, langchain_embeddings(), table="chunks", db_file=str(DB_FILE))
+    return store.as_retriever(search_kwargs=dict(k=4))  # the 4 most similar chunks to the question
 
 
 # the prompt: retrieved chunks are DATA, delimited and labelled with their IDs, so that the LLM can cite them
@@ -60,7 +62,7 @@ chain = prompt | llm.with_structured_output(Answer)
 
 
 def retrieve(question: str) -> list[Document]:  # R: retrieval
-    return retriever.invoke(question)
+    return retriever().invoke(question)
 
 
 def generate(question: str, documents: list[Document]) -> Answer:  # A: augmentation, G: generation
