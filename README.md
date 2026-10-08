@@ -81,7 +81,7 @@ See the slides for how to get free access to LLMs, or to run them locally (e.g. 
 
 ## How to run a snippet
 
-> Do NOT run snippets as standalone scripts, i.e. do NOT run them via `python path/to/snippet.py`.
+> Prefer the runner below to `python path/to/snippet.py`: same command for every snippet, no paths to remember.
 > Always run commands from the root directory of the project.
 
 To run a snippet, use the following command:
