@@ -42,7 +42,7 @@ jobs:
       - name: Run snippets
         run: poetry run poe smoke -k "${{ inputs.filter }}"
       - name: Publish the report (job summary + the pinned "smoke-report" issue)
-        if: always()
+        if: success() || failure()  # i.e. not when cancelled (it would publish a partial report)
         run: |
           touch "$SMOKE_REPORT"
           {
