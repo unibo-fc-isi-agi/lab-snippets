@@ -7,6 +7,7 @@ The slides are released as PDFs (one <lecture>_slides.pdf per lecture) at https:
 TODO:
 1. resolve a release (default: latest) via GitHub's API, and download its PDFs into a git-ignored cache,
    using the assets' digests (SHA-256) to skip unchanged files
+   (tip: send a GITHUB_TOKEN, if set: unauthenticated calls get 60 requests/hour per IP, which shared networks exhaust quickly)
 2. load the PDFs page by page (e.g. via pypdf): one page = one slide = one chunk;
    strip the boilerplate repeated on every page, skip near-empty pages, keep lecture, page, title, and a link to the page as metadata
 3. store the chunks with their embeddings (snippets.lecture_rag.embeddings) in SQLite via sqlite-vec (snippets.lecture_rag.vec),
