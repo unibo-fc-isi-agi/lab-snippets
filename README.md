@@ -88,7 +88,7 @@ Most snippets call some LLM via an OpenAI-compatible API (by default, [OpenRoute
 and they are configured via environment variables:
 - `OPENAI_BASE_URL`: the API's URL (default: `https://openrouter.ai/api/v1/`)
 - `OPENAI_API_KEY`: your API key (if missing, it is asked interactively)
-- `OPENAI_MODEL`: the model to use (default: `openrouter/auto`)
+- `OPENAI_MODEL`: the model to use (default: `nvidia/nemotron-3-super-120b-a12b:free`, free; `openrouter/auto` lets Open Router pick a model, but is paid)
 
 The snippets of the `rag` lecture also need an _embedding_ model, configured via:
 - `EMBEDDINGS_BASE_URL`: the API's URL (default: `http://localhost:11434/v1`, i.e. a local [Ollama](https://ollama.com) server)

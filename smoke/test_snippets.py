@@ -15,6 +15,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).parent.parent
+MODEL = "nvidia/nemotron-3-super-120b-a12b:free"  # the snippets' default
 QUESTION = "What time is it in Tokyo now?\n"  # for the REPLs: one question, then EOF (i.e. Ctrl+D) ends them
 
 # how to run each snippet: command-line args, stdin, a regex of `bad` output (some snippets report errors, then exit with 0),
@@ -36,9 +37,9 @@ CASES = {
     "agents/exercise3/decisions_mcp_server.py": dict(),
     "agents/exercise3/gateway.py": dict(skip="a server: run by test_gateway.py and agent_gateway.py"),
     "agents/exercise3/test_gateway.py": dict(),
-    "free_access/example1/free_providers.py": dict(args=["openrouter", os.environ.get("OPENAI_MODEL", ""), "Hi!"],
+    "free_access/example1/free_providers.py": dict(args=["openrouter", os.environ.get("OPENAI_MODEL", MODEL), "Hi!"],
                                                    skip=None if os.environ.get("OPENROUTER_API_KEY") else "set OPENROUTER_API_KEY"),
-    "governance/exercise1/compare_models.py": dict(args=[os.environ.get("OPENAI_MODEL", "openrouter/auto")], bad=r"\bn/a\b"),  # failed runs
+    "governance/exercise1/compare_models.py": dict(bad=r"\bn/a\b"),  # n/a: failed runs
     "llmaas/example1/repl_chat_openai.py": dict(stdin="Hi!\n"),
     "llmaas/example1bis/repl_chat_anthropic.py": dict(stdin="Hi!\n", skip=None if os.environ.get("ANTHROPIC_BASE_URL") else "set ANTHROPIC_BASE_URL (e.g. Ollama)"),
     "llmaas/example2/repl_chat_openai_async.py": dict(stdin="Hi!\n", bad=r"assistant> *$"),  # an empty answer

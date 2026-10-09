@@ -15,18 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Run every snippet against a real LLM
     services:
-      ollama:  # embeddings (nomic-embed-text) and the Anthropic-compatible API (gemma4:e2b): the snippets' defaults
+      ollama:  # the snippets' local defaults: embeddings (nomic-embed-text), Anthropic-compatible API (gemma4:e2b), llama3.2
         image: ollama/ollama:0.34.4
         ports:
           - 11434:11434
     env:
-      # chat via OpenRouter's free models (override them via repository variables, e.g. when they get retired)
-      OPENAI_BASE_URL: https://openrouter.ai/api/v1/
+      # no model is set here: snippets run with their defaults (Open Router's free models), as students run them
       OPENAI_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free' }}
-      VISION_MODEL: ${{ vars.VISION_MODEL || 'google/gemma-4-26b-a4b-it:free' }}
-      JUDGE_MODEL: ${{ vars.JUDGE_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free' }}
       ANTHROPIC_BASE_URL: http://localhost:11434
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPETITIONS: 1  # few requests: free models are rate-limited
@@ -42,7 +38,7 @@ jobs:
       - run: poetry install
       - name: Pull the local models
         run: |
-          for model in nomic-embed-text gemma4:e2b; do curl -sSf http://localhost:11434/api/pull -d "{\"model\": \"$model\", \"stream\": false}"; done
+          for model in nomic-embed-text gemma4:e2b llama3.2; do curl -sSf http://localhost:11434/api/pull -d "{\"model\": \"$model\", \"stream\": false}"; done
       - name: Run snippets
         run: poetry run poe smoke -k "${{ inputs.filter }}"
       - name: Publish the report (job summary + the pinned "smoke-report" issue)
@@ -50,7 +46,7 @@ jobs:
         run: |
           touch "$SMOKE_REPORT"
           {
-            echo "Outcome of running every snippet against \`$OPENAI_MODEL\` (OpenRouter) and local Ollama models, as of $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "Outcome of running every snippet with their default models (Open Router's free ones, and local Ollama ones), as of $(date -u '+%Y-%m-%d %H:%M UTC')"
             echo "(filter: \`${{ inputs.filter || 'none' }}\`, [run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})):"
             echo "✅ $(grep -c '| ✅ |' "$SMOKE_REPORT") passed, ❌ $(grep -c '| ❌ |' "$SMOKE_REPORT") failed, ⏭️ $(grep -c '| ⏭️ |' "$SMOKE_REPORT") skipped."
             echo

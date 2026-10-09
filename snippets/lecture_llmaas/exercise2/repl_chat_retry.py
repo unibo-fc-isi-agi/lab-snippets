@@ -47,7 +47,7 @@ if __name__ == "__main__":
     config = parse_args()
     base_url = os.environ.get("OPENAI_BASE_URL", "https://openrouter.ai/api/v1/")
     api_key = os.environ.get("OPENAI_API_KEY") or input(f"Enter your API key for {base_url}: ")
-    model = os.environ.get("OPENAI_MODEL", "openrouter/auto")
+    model = os.environ.get("OPENAI_MODEL", "nvidia/nemotron-3-super-120b-a12b:free")
 
     # beware: the OpenAI client ALREADY retries twice, by default (with backoff), so we disable that, to be in control
     client = OpenAI(base_url=base_url, api_key=api_key, max_retries=0)

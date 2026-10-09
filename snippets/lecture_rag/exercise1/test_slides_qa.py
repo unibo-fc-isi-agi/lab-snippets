@@ -54,7 +54,7 @@ def test_retrieval(db):
     assert recall_at_k(ranks, 5) >= 0.7  # a regression threshold (0.75 with nomic-embed-text): raise it as retrieval improves
 
 
-judge = OpenRouterModel(model=os.environ.get("JUDGE_MODEL", "openai/gpt-oss-120b"), api_key=api_key, base_url=base_url)
+judge = OpenRouterModel(model=os.environ.get("JUDGE_MODEL", "google/gemma-4-31b-it:free"), api_key=api_key, base_url=base_url)
 faithfulness = FaithfulnessMetric(model=judge, threshold=0.7)  # claims in the answer that the retrieved slides support / all claims
 
 @pytest.mark.parametrize("case", GOLD["questions"], ids=lambda case: case["question"])

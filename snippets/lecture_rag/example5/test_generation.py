@@ -28,7 +28,7 @@ TEST_CASES = {  # question -> expected answer (only needed by contextual recall)
         "Priority goes to the candidate with the higher score in the research proposal; if still tied, to the younger candidate.",
 }
 
-judge = OpenRouterModel(model=os.environ.get("JUDGE_MODEL", "openai/gpt-oss-120b"), api_key=api_key, base_url=base_url)
+judge = OpenRouterModel(model=os.environ.get("JUDGE_MODEL", "google/gemma-4-31b-it:free"), api_key=api_key, base_url=base_url)
 metrics = [FaithfulnessMetric(model=judge, threshold=0.7),
            AnswerRelevancyMetric(model=judge, threshold=0.7),
            ContextualRecallMetric(model=judge, threshold=0.7)]

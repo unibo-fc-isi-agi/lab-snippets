@@ -82,10 +82,10 @@ and a standard deviation ≤ 0.5 per letter; break ties by latency, then by cost
 | Model | Error w.r.t. committee | Max std. dev. | Failures | Ranking of candidates | Latency |
 |---|---|---|---|---|---|
 | `google/gemma-4-26b-a4b-it` | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ |
-| `openai/gpt-oss-120b` | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ |
+| `nvidia/nemotron-3-super-120b-a12b` | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ |
 | a local model via Ollama | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ | _[Ex. 1]_ |
 
-Note that `gpt-oss` does not accept images: it could score letters only, and would require a second model for documents.
+Note that Nemotron 3 Super does not accept images: it could score letters only, and would require a second model for documents.
 Unless Exercise 1 shows a large quality gap, we prefer __one__ multimodal model for all tasks (fewer artifacts to assess and monitor),
 i.e. __Gemma 4 26B A4B__ (instruction-tuned).
 

@@ -35,7 +35,7 @@ def score_in_range(outputs, expectations) -> bool:  # tolerant match
     return expectations.get("min_score", 0) <= outputs["score"] <= expectations.get("max_score", 5)
 
 # 4. LLM-as-a-judge (the API key is read from OPENAI_API_KEY)
-judge_options = dict(model=f"openai:/{os.environ.get('JUDGE_MODEL', 'openai/gpt-oss-120b')}", base_url=base_url,
+judge_options = dict(model=f"openai:/{os.environ.get('JUDGE_MODEL', 'google/gemma-4-31b-it:free')}", base_url=base_url,
                      feedback_value_type=Literal["yes", "no"], generate_rationale_first=True)
 
 relationship = make_judge(  # reference-based: the judge compares outputs with expectations

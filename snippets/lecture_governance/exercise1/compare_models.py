@@ -20,7 +20,7 @@ from snippets.lecture_prompting.example1.letter_scoring_openai import LetterInfo
 from snippets.lecture_llmaas.exercise2.repl_chat_retry import with_retries
 
 # step 1: the shortlist (free models are rate-limited: retries below)
-DEFAULT_MODELS = ["google/gemma-4-26b-a4b-it:free", "openai/gpt-oss-120b:free", "llama3.2@http://localhost:11434/v1"]
+DEFAULT_MODELS = ["google/gemma-4-26b-a4b-it:free", "nvidia/nemotron-3-super-120b-a12b:free", "llama3.2@http://localhost:11434/v1"]
 REPETITIONS = int(os.environ.get("REPETITIONS", 5))
 TEMPERATURE = os.environ.get("TEMPERATURE")
 # the reference: the committee's OWN scores, by reading the letters (without it, one can tell whether models agree, not who is right)

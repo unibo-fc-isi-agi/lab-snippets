@@ -41,7 +41,7 @@ def test_best_letter_is_mario_rossi():
 
 
 # 3. LLM-as-a-judge: a (different) model grades what is hard to check with code
-judge = OpenRouterModel(model=os.environ.get("JUDGE_MODEL", "openai/gpt-oss-120b"), api_key=api_key, base_url=base_url)
+judge = OpenRouterModel(model=os.environ.get("JUDGE_MODEL", "google/gemma-4-31b-it:free"), api_key=api_key, base_url=base_url)
 
 relationship = GEval(  # reference-based: the judge compares the actual output with the expected one
     name="Relationship",
