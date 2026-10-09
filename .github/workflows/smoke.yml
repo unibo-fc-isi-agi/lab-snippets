@@ -9,24 +9,27 @@ on:
         default: ''
 permissions:
   contents: read
-  models: read  # GitHub Models, via GITHUB_TOKEN
   issues: write  # to publish the report in the "smoke-report" issue
 jobs:
   smoke:
     runs-on: ubuntu-latest
     name: Run every snippet against a real LLM
+    services:
+      ollama:  # embeddings (nomic-embed-text) and the Anthropic-compatible API (gemma4:e2b): the snippets' defaults
+        image: ollama/ollama:0.34.4
+        ports:
+          - 11434:11434
     env:
-      OPENAI_BASE_URL: https://models.github.ai/inference
-      OPENAI_API_KEY: ${{ secrets.GITHUB_TOKEN }}
-      OPENAI_MODEL: openai/gpt-4.1-mini
-      VISION_MODEL: openai/gpt-4.1-mini
-      JUDGE_MODEL: openai/gpt-4.1-mini
-      EMBEDDINGS_BASE_URL: https://models.github.ai/inference
-      EMBEDDINGS_API_KEY: ${{ secrets.GITHUB_TOKEN }}
-      EMBEDDINGS_MODEL: openai/text-embedding-3-small
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # chat via OpenRouter's free models (override them via repository variables, e.g. when they get retired)
+      OPENAI_BASE_URL: https://openrouter.ai/api/v1/
+      OPENAI_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free' }}
+      VISION_MODEL: ${{ vars.VISION_MODEL || 'google/gemma-4-26b-a4b-it:free' }}
+      JUDGE_MODEL: ${{ vars.JUDGE_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free' }}
+      ANTHROPIC_BASE_URL: http://localhost:11434
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPETITIONS: 1  # few requests: the free tier allows ~150 per day
+      REPETITIONS: 1  # few requests: free models are rate-limited
       SAMPLES: 1
       SMOKE_REPORT: smoke-report.md
     steps:
@@ -37,6 +40,9 @@ jobs:
       - uses: astral-sh/setup-uv@v6  # uvx, for the third-party MCP server of the gateway
       - run: pip install -r requirements.txt
       - run: poetry install
+      - name: Pull the local models
+        run: |
+          for model in nomic-embed-text gemma4:e2b; do curl -sSf http://localhost:11434/api/pull -d "{\"model\": \"$model\", \"stream\": false}"; done
       - name: Run snippets
         run: poetry run poe smoke -k "${{ inputs.filter }}"
       - name: Publish the report (job summary + the pinned "smoke-report" issue)
@@ -44,7 +50,7 @@ jobs:
         run: |
           touch "$SMOKE_REPORT"
           {
-            echo "Outcome of running every snippet against \`$OPENAI_MODEL\` (GitHub Models), as of $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "Outcome of running every snippet against \`$OPENAI_MODEL\` (OpenRouter) and local Ollama models, as of $(date -u '+%Y-%m-%d %H:%M UTC')"
             echo "(filter: \`${{ inputs.filter || 'none' }}\`, [run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})):"
             echo "✅ $(grep -c '| ✅ |' "$SMOKE_REPORT") passed, ❌ $(grep -c '| ❌ |' "$SMOKE_REPORT") failed, ⏭️ $(grep -c '| ⏭️ |' "$SMOKE_REPORT") skipped."
             echo

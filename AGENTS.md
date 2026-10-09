@@ -46,7 +46,7 @@ poetry run poe test      # offline tests of the solutions
 ```
 
 Plus `poetry run poe smoke` (`.github/workflows/smoke.yml`, daily and on demand, never on push): runs **every** snippet against
-a real LLM (GitHub Models in CI) and lists each one's outcome in the issue labelled `smoke-report` (rewritten at each full run). Every runnable snippet needs an entry in its `CASES` table
+real LLMs (in CI: OpenRouter's free models, set via repository variables, and Ollama for embeddings) and lists each one's outcome in the issue labelled `smoke-report` (rewritten at each full run). Every runnable snippet needs an entry in its `CASES` table
 (`smoke/test_snippets.py`: args, stdin, or a reason to skip), or it fails.
 
 - Tests must stay **offline**: no LLM / embedding calls; test only the deterministic parts (mock the model).

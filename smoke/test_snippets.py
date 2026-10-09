@@ -6,6 +6,7 @@ Run with: poetry run poe smoke    (e.g. `poetry run poe smoke -k rag`, to run th
 Configure via the usual env vars (OPENAI_*, EMBEDDINGS_*, VISION_MODEL, JUDGE_MODEL, ...): see .github/workflows/smoke.yml (which publishes the outcomes in an issue).
 """
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -16,7 +17,8 @@ import pytest
 ROOT = Path(__file__).parent.parent
 QUESTION = "What time is it in Tokyo now?\n"  # for the REPLs: one question, then EOF (i.e. Ctrl+D) ends them
 
-# how to run each snippet: command-line args, stdin, or a reason to skip it. Snippets missing here make test_all_covered fail
+# how to run each snippet: command-line args, stdin, a regex of `bad` output (some snippets report errors, then exit with 0),
+# or a reason to skip it. Snippets missing here make test_all_covered fail
 CASES = {
     "agents/example1/agent_openai.py": dict(stdin=QUESTION),
     "agents/example1bis/agent_langchain.py": dict(stdin=QUESTION),
@@ -34,12 +36,12 @@ CASES = {
     "agents/exercise3/decisions_mcp_server.py": dict(),
     "agents/exercise3/gateway.py": dict(skip="a server: run by test_gateway.py and agent_gateway.py"),
     "agents/exercise3/test_gateway.py": dict(),
-    "free_access/example1/free_providers.py": dict(args=["github", os.environ.get("OPENAI_MODEL", ""), "Hi!"],
-                                                   skip=None if os.environ.get("GITHUB_TOKEN") else "set GITHUB_TOKEN"),
-    "governance/exercise1/compare_models.py": dict(args=[os.environ.get("OPENAI_MODEL", "openrouter/auto")]),
+    "free_access/example1/free_providers.py": dict(args=["openrouter", os.environ.get("OPENAI_MODEL", ""), "Hi!"],
+                                                   skip=None if os.environ.get("OPENROUTER_API_KEY") else "set OPENROUTER_API_KEY"),
+    "governance/exercise1/compare_models.py": dict(args=[os.environ.get("OPENAI_MODEL", "openrouter/auto")], bad=r"\bn/a\b"),  # failed runs
     "llmaas/example1/repl_chat_openai.py": dict(stdin="Hi!\n"),
     "llmaas/example1bis/repl_chat_anthropic.py": dict(stdin="Hi!\n", skip=None if os.environ.get("ANTHROPIC_BASE_URL") else "set ANTHROPIC_BASE_URL (e.g. Ollama)"),
-    "llmaas/example2/repl_chat_openai_async.py": dict(stdin="Hi!\n"),
+    "llmaas/example2/repl_chat_openai_async.py": dict(stdin="Hi!\n", bad=r"assistant> *$"),  # an empty answer
     "llmaas/exercise1/repl_chat_cached.py": dict(stdin="Hi!\nHi!\n"),  # the 2nd answer comes from the cache
     "llmaas/exercise2/repl_chat_retry.py": dict(stdin="Hi!\n"),
     "prompting/example1/letter_scoring_openai.py": dict(args=["mario-rossi"]),
@@ -67,6 +69,7 @@ CASES = {
     "validating/exercise2/test_id_extraction.py": dict(),
 }
 RATE_LIMITED = ("Error code: 429", "RateLimitError", "Too many requests", "Too Many Requests")
+ERRORS = r"error> .*"  # errors that the REPLs show, before going on
 
 
 def snippets() -> list[str]:  # e.g. "agents/example1/agent_openai.py", as listed by the runner
@@ -102,8 +105,11 @@ def test_snippet(snippet: str):
             server.terminate()
     output = result.stdout + result.stderr
     print(output)  # shown by pytest upon failure
-    if result.returncode != 0 and any(marker in output for marker in RATE_LIMITED):
+    bad = re.search("|".join(filter(None, [ERRORS, case.get("bad")])), output, re.MULTILINE)
+    if (result.returncode != 0 or bad) and any(marker in output for marker in RATE_LIMITED):
         pytest.skip("rate-limited: retry later")  # ponytail: substring heuristic, may hide a real failure printing these
+    if bad:
+        pytest.fail(f"exit code {result.returncode}, but bad output: {bad[0].strip() or repr(bad[0])}", pytrace=False)
     if result.returncode != 0:  # the reason: the last line mentioning an error (e.g. the exception), else the last line
         lines = output.strip().splitlines() or ["no output"]
         pytest.fail(next((line for line in reversed(lines) if "Error" in line or "Exception" in line), lines[-1]).strip(), pytrace=False)
