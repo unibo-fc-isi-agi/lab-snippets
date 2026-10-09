@@ -29,10 +29,13 @@ def test_slides_metadata_and_url(monkeypatch):
 def test_release(monkeypatch):
     urls = []
     info = {"tag_name": "2026.10.08", "assets": [{"name": "agents_slides.pdf", "digest": "sha256:a"}, {"name": "notes.zip", "digest": "sha256:b"}]}
-    monkeypatch.setattr(slides.urllib.request, "urlopen", lambda url: urls.append(url) or io.BytesIO(json.dumps(info).encode()))
+    monkeypatch.setattr(slides.urllib.request, "urlopen", lambda request: urls.append(request) or io.BytesIO(json.dumps(info).encode()))
+    monkeypatch.setattr(slides, "GITHUB_TOKEN", None)
     assert slides.release() == [Pdf("agents", "2026.10.08", "sha256:a")]
+    monkeypatch.setattr(slides, "GITHUB_TOKEN", "t0k3n")
     slides.release("2026.10.08")
-    assert urls[0].endswith("/releases/latest") and urls[1].endswith("/releases/tags/2026.10.08")
+    assert urls[0].full_url.endswith("/releases/latest") and urls[1].full_url.endswith("/releases/tags/2026.10.08")
+    assert not urls[0].has_header("Authorization") and urls[1].get_header("Authorization") == "Bearer t0k3n"  # the token, only if any
 
 
 def test_download_checks_digests(monkeypatch, tmp_path):
