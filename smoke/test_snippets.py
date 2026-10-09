@@ -51,7 +51,7 @@ CASES = {
     "prompting/example3/reasoning_effort.py": dict(args=["mario-rossi"]),
     "prompting/example4/chat_with_compaction.py": dict(stdin="Hi!\nTell me a joke.\n"),
     "prompting/exercise1/letter_scoring_checklist.py": dict(args=["mario-rossi"]),
-    "prompting/exercise2/id_extraction.py": dict(args=["mario-rossi", "1"]),
+    "prompting/exercise2/id_extraction.py": dict(args=["mario-rossi"]),
     "rag/example1/similarity.py": dict(),
     "rag/example2/vector_store_sqlite.py": dict(args=["Who supervises the thesis?"]),
     "rag/example2bis/vector_store_sqlite_vec.py": dict(args=["Who supervises the thesis?"]),
@@ -70,6 +70,7 @@ CASES = {
     "validating/exercise2/test_id_extraction.py": dict(),
 }
 RATE_LIMITED = ("Error code: 429", "RateLimitError", "Too many requests", "Too Many Requests")
+ATTEMPTS = 3  # per snippet, if rate-limited
 ERRORS = r"error> .*"  # errors that the REPLs show, before going on
 
 
@@ -89,11 +90,7 @@ def wait_for(port: int, timeout: float = 60) -> None:
         time.sleep(1)
 
 
-@pytest.mark.parametrize("snippet", CASES)
-def test_snippet(snippet: str):
-    case = CASES[snippet]
-    if case.get("skip"):
-        pytest.skip(case["skip"])
+def run(snippet: str, case: dict) -> tuple[subprocess.CompletedProcess, str, re.Match | None]:
     module = "snippets.lecture_" + snippet.removesuffix(".py").replace("/", ".")
     server = case.get("server") and subprocess.Popen([sys.executable, "-m", *case["server"]], cwd=ROOT)
     try:
@@ -106,8 +103,22 @@ def test_snippet(snippet: str):
             server.terminate()
     output = result.stdout + result.stderr
     print(output)  # shown by pytest upon failure
-    bad = re.search("|".join(filter(None, [ERRORS, case.get("bad")])), output, re.MULTILINE)
-    if (result.returncode != 0 or bad) and any(marker in output for marker in RATE_LIMITED):
+    return result, output, re.search("|".join(filter(None, [ERRORS, case.get("bad")])), output, re.MULTILINE)
+
+
+@pytest.mark.parametrize("snippet", CASES)
+def test_snippet(snippet: str):
+    case = CASES[snippet]
+    if case.get("skip"):
+        pytest.skip(case["skip"])
+    for attempt in range(1, ATTEMPTS + 1):
+        result, output, bad = run(snippet, case)
+        rate_limited = (result.returncode != 0 or bad) and any(marker in output for marker in RATE_LIMITED)
+        if not rate_limited:
+            break
+        if attempt < ATTEMPTS:
+            time.sleep(60)  # free models allow ~20 requests/minute: wait for the next minute
+    else:
         pytest.skip("rate-limited: retry later")  # ponytail: substring heuristic, may hide a real failure printing these
     if bad:
         pytest.fail(f"exit code {result.returncode}, but bad output: {bad[0].strip() or repr(bad[0])}", pytrace=False)

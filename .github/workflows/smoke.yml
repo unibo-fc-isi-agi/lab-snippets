@@ -20,13 +20,11 @@ jobs:
         ports:
           - 11434:11434
     env:
-      # no model is set here: snippets run with their defaults (Open Router's free models), as students run them
+      # no model nor parameter is set here: snippets run with their defaults (Open Router's FREE models), as students run them
       OPENAI_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       ANTHROPIC_BASE_URL: http://localhost:11434
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPETITIONS: 1  # few requests: free models are rate-limited
-      SAMPLES: 1
       SMOKE_REPORT: smoke-report.md
     steps:
       - uses: actions/checkout@v5
@@ -39,21 +37,30 @@ jobs:
       - name: Pull the local models
         run: |
           for model in nomic-embed-text gemma4:e2b llama3.2; do curl -sSf http://localhost:11434/api/pull -d "{\"model\": \"$model\", \"stream\": false}"; done
+      - name: Record the credit used so far (snippets must use free models only)
+        run: |
+          echo "CREDIT_BEFORE=$(curl -sSf https://openrouter.ai/api/v1/key -H "Authorization: Bearer $OPENROUTER_API_KEY" | jq .data.usage)" >> "$GITHUB_ENV"
       - name: Run snippets
         run: poetry run poe smoke -k "${{ inputs.filter }}"
       - name: Publish the report (job summary + the pinned "smoke-report" issue)
         if: success() || failure()  # i.e. not when cancelled (it would publish a partial report)
         run: |
           touch "$SMOKE_REPORT"
+          credit_after=$(curl -sSf https://openrouter.ai/api/v1/key -H "Authorization: Bearer $OPENROUTER_API_KEY" | jq .data.usage)
+          spent=$(jq -n "$credit_after - $CREDIT_BEFORE")  # usage may be reported with some delay: the next run would show it
+          paid=$(jq -n "$credit_after > $CREDIT_BEFORE")
           {
             echo "Outcome of running every snippet with their default models (Open Router's free ones, and local Ollama ones), as of $(date -u '+%Y-%m-%d %H:%M UTC')"
             echo "(filter: \`${{ inputs.filter || 'none' }}\`, [run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})):"
             echo "✅ $(grep -c '| ✅ |' "$SMOKE_REPORT") passed, ❌ $(grep -c '| ❌ |' "$SMOKE_REPORT") failed, ⏭️ $(grep -c '| ⏭️ |' "$SMOKE_REPORT") skipped."
+            if [ "$paid" = "true" ]; then echo; echo "> [!WARNING]"; echo "> This run spent \$$spent of Open Router credit (total so far: \$$credit_after): some snippet uses a model that is NOT free!"; fi
             echo
             cat "$SMOKE_REPORT"
           } > body.md
           cat body.md >> "$GITHUB_STEP_SUMMARY"
-          [ -z "${{ inputs.filter }}" ] || exit 0  # partial runs (with a filter) do not overwrite the issue
-          gh label create smoke-report --description "Updated daily by the Smoke workflow" --force
-          issue=$(gh issue list --label smoke-report --state all --limit 1 --json number --jq '.[0].number')
-          if [ -n "$issue" ]; then gh issue edit "$issue" --body-file body.md; else gh issue create --title "Smoke report: which snippets work" --label smoke-report --body-file body.md; fi
+          if [ -z "${{ inputs.filter }}" ]; then  # partial runs (with a filter) do not overwrite the issue
+            gh label create smoke-report --description "Updated daily by the Smoke workflow" --force
+            issue=$(gh issue list --label smoke-report --state all --limit 1 --json number --jq '.[0].number')
+            if [ -n "$issue" ]; then gh issue edit "$issue" --body-file body.md; else gh issue create --title "Smoke report: which snippets work" --label smoke-report --body-file body.md; fi
+          fi
+          [ "$paid" = "false" ]  # fails the job if credit was spent
