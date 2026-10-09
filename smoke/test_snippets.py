@@ -1,0 +1,109 @@
+"""
+Online smoke tests: run EVERY snippet (as students do) against a real LLM, and check it exits with code 0.
+LLMs are not deterministic, so this tells whether snippets still work (APIs, models, dependencies), not whether answers are right.
+
+Run with: poetry run poe smoke    (e.g. `poetry run poe smoke -k rag`, to run the snippets of one lecture only)
+Configure via the usual env vars (OPENAI_*, EMBEDDINGS_*, VISION_MODEL, JUDGE_MODEL, ...): see .github/workflows/smoke.yml (which publishes the outcomes in an issue).
+"""
+import os
+import socket
+import subprocess
+import sys
+import time
+from pathlib import Path
+import pytest
+
+ROOT = Path(__file__).parent.parent
+QUESTION = "What time is it in Tokyo now?\n"  # for the REPLs: one question, then EOF (i.e. Ctrl+D) ends them
+
+# how to run each snippet: command-line args, stdin, or a reason to skip it. Snippets missing here make test_all_covered fail
+CASES = {
+    "agents/example1/agent_openai.py": dict(stdin=QUESTION),
+    "agents/example1bis/agent_langchain.py": dict(stdin=QUESTION),
+    "agents/example2/agent_mcp.py": dict(stdin=QUESTION),
+    "agents/example2/simple_tools_mcp_server.py": dict(),  # serves over stdio until EOF
+    "agents/example3/test_agent.py": dict(),
+    "agents/exercise1/agent_committee.py": dict(stdin="Which candidates applied?\n"),
+    "agents/exercise1/committee.py": dict(),
+    "agents/exercise1/test_committee_agent.py": dict(),
+    "agents/exercise2/agent_decisions.py": dict(stdin="Which candidates applied?\n"),
+    "agents/exercise2/decisions.py": dict(),
+    "agents/exercise2/test_decisions_agent.py": dict(),
+    "agents/exercise3/agent_gateway.py": dict(stdin="Which candidates applied?\n", server=["snippets.lecture_agents.exercise3.gateway"], port=8000),
+    "agents/exercise3/applications_mcp_server.py": dict(),
+    "agents/exercise3/decisions_mcp_server.py": dict(),
+    "agents/exercise3/gateway.py": dict(skip="a server: run by test_gateway.py and agent_gateway.py"),
+    "agents/exercise3/test_gateway.py": dict(),
+    "free_access/example1/free_providers.py": dict(args=["github", os.environ.get("OPENAI_MODEL", ""), "Hi!"],
+                                                   skip=None if os.environ.get("GITHUB_TOKEN") else "set GITHUB_TOKEN"),
+    "governance/exercise1/compare_models.py": dict(args=[os.environ.get("OPENAI_MODEL", "openrouter/auto")]),
+    "llmaas/example1/repl_chat_openai.py": dict(stdin="Hi!\n"),
+    "llmaas/example1bis/repl_chat_anthropic.py": dict(stdin="Hi!\n", skip=None if os.environ.get("ANTHROPIC_BASE_URL") else "set ANTHROPIC_BASE_URL (e.g. Ollama)"),
+    "llmaas/example2/repl_chat_openai_async.py": dict(stdin="Hi!\n"),
+    "llmaas/exercise1/repl_chat_cached.py": dict(stdin="Hi!\nHi!\n"),  # the 2nd answer comes from the cache
+    "llmaas/exercise2/repl_chat_retry.py": dict(stdin="Hi!\n"),
+    "prompting/example1/letter_scoring_openai.py": dict(args=["mario-rossi"]),
+    "prompting/example1bis/letter_scoring_langchain.py": dict(args=["mario-rossi"]),
+    "prompting/example2/letter_tone.py": dict(args=["cot", "mario-rossi"]),
+    "prompting/example3/reasoning_effort.py": dict(args=["mario-rossi"]),
+    "prompting/example4/chat_with_compaction.py": dict(stdin="Hi!\nTell me a joke.\n"),
+    "prompting/exercise1/letter_scoring_checklist.py": dict(args=["mario-rossi"]),
+    "prompting/exercise2/id_extraction.py": dict(args=["mario-rossi", "1"]),
+    "rag/example1/similarity.py": dict(),
+    "rag/example2/vector_store_sqlite.py": dict(args=["Who supervises the thesis?"]),
+    "rag/example2bis/vector_store_sqlite_vec.py": dict(args=["Who supervises the thesis?"]),
+    "rag/example3/hybrid_search.py": dict(args=["Who supervises the thesis?"]),
+    "rag/example4/rag_langchain.py": dict(args=["Who supervises the thesis?"]),
+    "rag/example4bis/agentic_rag.py": dict(stdin="Who supervises the thesis?\n"),
+    "rag/example5/test_generation.py": dict(),
+    "rag/example5/test_retrieval.py": dict(),
+    "rag/exercise1/index.py": dict(),
+    "rag/exercise1/qa.py": dict(args=["What is RAG?"]),
+    "rag/exercise1/slides.py": dict(),
+    "rag/exercise1/test_slides_qa.py": dict(),
+    "validating/example1/test_letter_scoring.py": dict(),
+    "validating/example1bis/evaluate_mlflow.py": dict(),
+    "validating/exercise1/test_all_fields.py": dict(),
+    "validating/exercise2/test_id_extraction.py": dict(),
+}
+RATE_LIMITED = ("Error code: 429", "RateLimitError", "Too many requests", "Too Many Requests")
+
+
+def snippets() -> list[str]:  # e.g. "agents/example1/agent_openai.py", as listed by the runner
+    listing = subprocess.run([sys.executable, "-m", "snippets", "--list"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    return [line.strip().removeprefix("snippets/lecture_") for line in listing.splitlines() if line.startswith(" ")]
+
+
+def test_all_covered():
+    assert set(snippets()) == set(CASES), "add the new snippets to CASES (and drop the deleted ones)"
+
+
+def wait_for(port: int, timeout: float = 60) -> None:
+    deadline = time.monotonic() + timeout
+    while socket.socket().connect_ex(("localhost", port)) != 0:
+        assert time.monotonic() < deadline, f"nothing listening on port {port}"
+        time.sleep(1)
+
+
+@pytest.mark.parametrize("snippet", CASES)
+def test_snippet(snippet: str):
+    case = CASES[snippet]
+    if case.get("skip"):
+        pytest.skip(case["skip"])
+    module = "snippets.lecture_" + snippet.removesuffix(".py").replace("/", ".")
+    server = case.get("server") and subprocess.Popen([sys.executable, "-m", *case["server"]], cwd=ROOT)
+    try:
+        if server:
+            wait_for(case["port"])
+        result = subprocess.run([sys.executable, "-m", module, *case.get("args", [])], cwd=ROOT, input=case.get("stdin", ""),
+                                capture_output=True, text=True, timeout=900)
+    finally:
+        if server:
+            server.terminate()
+    output = result.stdout + result.stderr
+    print(output)  # shown by pytest upon failure
+    if result.returncode != 0 and any(marker in output for marker in RATE_LIMITED):
+        pytest.skip("rate-limited: retry later")  # ponytail: substring heuristic, may hide a real failure printing these
+    if result.returncode != 0:  # the reason: the last line mentioning an error (e.g. the exception), else the last line
+        lines = output.strip().splitlines() or ["no output"]
+        pytest.fail(next((line for line in reversed(lines) if "Error" in line or "Exception" in line), lines[-1]).strip(), pytrace=False)

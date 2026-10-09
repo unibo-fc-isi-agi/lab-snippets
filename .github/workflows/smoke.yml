@@ -1,0 +1,57 @@
+name: Smoke
+on:
+  schedule:
+    - cron: '0 4 * * *'  # daily
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'pytest -k expression, e.g. "rag" or "agents and not test_" (empty: all snippets)'
+        default: ''
+permissions:
+  contents: read
+  models: read  # GitHub Models, via GITHUB_TOKEN
+  issues: write  # to publish the report in the "smoke-report" issue
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    name: Run every snippet against a real LLM
+    env:
+      OPENAI_BASE_URL: https://models.github.ai/inference
+      OPENAI_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      OPENAI_MODEL: openai/gpt-4.1-mini
+      VISION_MODEL: openai/gpt-4.1-mini
+      JUDGE_MODEL: openai/gpt-4.1-mini
+      EMBEDDINGS_BASE_URL: https://models.github.ai/inference
+      EMBEDDINGS_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      EMBEDDINGS_MODEL: openai/text-embedding-3-small
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPETITIONS: 1  # few requests: the free tier allows ~150 per day
+      SAMPLES: 1
+      SMOKE_REPORT: smoke-report.md
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v6  # uvx, for the third-party MCP server of the gateway
+      - run: pip install -r requirements.txt
+      - run: poetry install
+      - name: Run snippets
+        run: poetry run poe smoke -k "${{ inputs.filter }}"
+      - name: Publish the report (job summary + the pinned "smoke-report" issue)
+        if: always()
+        run: |
+          touch "$SMOKE_REPORT"
+          {
+            echo "Outcome of running every snippet against \`$OPENAI_MODEL\` (GitHub Models), as of $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "(filter: \`${{ inputs.filter || 'none' }}\`, [run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})):"
+            echo "✅ $(grep -c '| ✅ |' "$SMOKE_REPORT") passed, ❌ $(grep -c '| ❌ |' "$SMOKE_REPORT") failed, ⏭️ $(grep -c '| ⏭️ |' "$SMOKE_REPORT") skipped."
+            echo
+            cat "$SMOKE_REPORT"
+          } > body.md
+          cat body.md >> "$GITHUB_STEP_SUMMARY"
+          [ -z "${{ inputs.filter }}" ] || exit 0  # partial runs (with a filter) do not overwrite the issue
+          gh label create smoke-report --description "Updated daily by the Smoke workflow" --force
+          issue=$(gh issue list --label smoke-report --state all --limit 1 --json number --jq '.[0].number')
+          if [ -n "$issue" ]; then gh issue edit "$issue" --body-file body.md; else gh issue create --title "Smoke report: which snippets work" --label smoke-report --body-file body.md; fi

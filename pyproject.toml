@@ -36,6 +36,7 @@ compile = "python -m compileall -q snippets data"
 list = "python -m snippets --list"
 collect = "pytest --collect-only -q snippets"  # imports the test snippets, without running them
 test = "pytest -q tests"  # offline tests of the exercises' solutions (no LLM calls)
+smoke = "pytest -rA smoke"  # runs EVERY snippet against a real LLM (needs the OPENAI_* env vars, etc.)
 
 [build-system]
 requires = ["poetry-core"]

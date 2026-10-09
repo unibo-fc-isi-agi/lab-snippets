@@ -33,7 +33,7 @@ The slides repo mounts this one as the git submodule `static/lab-snippets/`, and
 - Write and fix solutions on `master` only.
 - Then `git checkout exercises && git merge master`, keeping the placeholders: drop solution files and
   their tests from the merge, and update a placeholder's TODO list if the exercise's text changed.
-- A new exercise needs: the solution + a test in `tests/test_<NAME>.py` on `master`; a placeholder on `exercises`;
+- A new exercise needs: the solution + a test in `tests/test_<NAME>.py` + a `CASES` entry in `smoke/test_snippets.py` on `master`; a placeholder on `exercises`;
   a row update in the README's "Suggested order" table.
 
 ## Checks (same as CI, `.github/workflows/check.yml`)
@@ -44,6 +44,10 @@ poetry run poe list      # every snippet discoverable by the runner
 poetry run poe collect   # test snippets importable (set OPENAI_API_KEY=dummy)
 poetry run poe test      # offline tests of the solutions
 ```
+
+Plus `poetry run poe smoke` (`.github/workflows/smoke.yml`, daily and on demand, never on push): runs **every** snippet against
+a real LLM (GitHub Models in CI) and lists each one's outcome in the issue labelled `smoke-report` (rewritten at each full run). Every runnable snippet needs an entry in its `CASES` table
+(`smoke/test_snippets.py`: args, stdin, or a reason to skip), or it fails.
 
 - Tests must stay **offline**: no LLM / embedding calls; test only the deterministic parts (mock the model).
 - Modules must be importable without network or API endpoints (CI collects them): no work at import time
