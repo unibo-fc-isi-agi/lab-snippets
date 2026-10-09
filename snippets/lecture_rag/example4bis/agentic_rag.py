@@ -35,8 +35,8 @@ def search_documents(query: str, candidate: str | None = None) -> str:
     to combine information about a candidate with the regulations, search them separately.
     """
     with connect(DB_FILE) as conn:  # one connection per call: tools may run in other threads
-        results = search(conn, query, k=3, candidate=candidate)
-    return "\n".join(f'<document id="{id}">\n{text}\n</document>' for _, id, text in results)
+        results = search(conn, query, k=3, candidate=candidate if candidate in data.CANDIDATES else None)  # e.g. LLMs may pass 'None'
+    return "\n".join(f'<document id="{id}">\n{text}\n</document>' for _, id, text in results) or "No documents found."  # never empty
 
 
 instructions = f"""

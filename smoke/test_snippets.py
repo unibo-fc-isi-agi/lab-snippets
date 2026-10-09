@@ -16,6 +16,7 @@ import pytest
 
 ROOT = Path(__file__).parent.parent
 MODEL = "nvidia/nemotron-3-super-120b-a12b:free"  # the snippets' default
+# questions are answerable from data/, as in the snippets' docstrings (agents may otherwise search on and on)
 QUESTION = "What time is it in Tokyo now?\n"  # for the REPLs: one question, then EOF (i.e. Ctrl+D) ends them
 
 # how to run each snippet: command-line args, stdin, a regex of `bad` output (some snippets report errors, then exit with 0),
@@ -53,11 +54,11 @@ CASES = {
     "prompting/exercise1/letter_scoring_checklist.py": dict(args=["mario-rossi"]),
     "prompting/exercise2/id_extraction.py": dict(args=["mario-rossi"]),
     "rag/example1/similarity.py": dict(),
-    "rag/example2/vector_store_sqlite.py": dict(args=["Who supervises the thesis?"]),
-    "rag/example2bis/vector_store_sqlite_vec.py": dict(args=["Who supervises the thesis?"]),
-    "rag/example3/hybrid_search.py": dict(args=["Who supervises the thesis?"]),
-    "rag/example4/rag_langchain.py": dict(args=["Who supervises the thesis?"]),
-    "rag/example4bis/agentic_rag.py": dict(stdin="Who supervises the thesis?\n"),
+    "rag/example2/vector_store_sqlite.py": dict(args=["Which English certificates are accepted, and with which minimum scores?"]),
+    "rag/example2bis/vector_store_sqlite_vec.py": dict(args=["Which English certificates are accepted, and with which minimum scores?"]),
+    "rag/example3/hybrid_search.py": dict(args=["Which English certificates are accepted, and with which minimum scores?"]),
+    "rag/example4/rag_langchain.py": dict(args=["Which English certificates are accepted, and with which minimum scores?"]),
+    "rag/example4bis/agentic_rag.py": dict(stdin="Could the author of Mario Rossi's recommendation letter sit on the admission committee?\n"),
     "rag/example5/test_generation.py": dict(),
     "rag/example5/test_retrieval.py": dict(),
     "rag/exercise1/index.py": dict(),
