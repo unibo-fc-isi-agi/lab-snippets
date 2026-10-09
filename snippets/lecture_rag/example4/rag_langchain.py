@@ -21,7 +21,7 @@ from snippets.lecture_rag.embeddings import langchain_embeddings
 
 base_url = os.environ.get("OPENAI_BASE_URL", "https://openrouter.ai/api/v1/")
 api_key = os.environ.get("OPENAI_API_KEY") or input(f"Enter your API key for {base_url}: ")
-model = os.environ.get("OPENAI_MODEL", "openrouter/auto")
+model = os.environ.get("OPENAI_MODEL", "nvidia/nemotron-3-super-120b-a12b:free")
 
 llm = ChatOpenAI(base_url=base_url, api_key=api_key, model=model)
 DB_FILE = Path("output/rag-example4.db")

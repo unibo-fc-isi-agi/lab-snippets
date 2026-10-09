@@ -11,7 +11,7 @@ from langchain_openai import ChatOpenAI
 
 base_url = os.environ.get("OPENAI_BASE_URL", "https://openrouter.ai/api/v1/")
 api_key = os.environ.get("OPENAI_API_KEY") or input(f"Enter your API key for {base_url}: ")
-model = os.environ.get("OPENAI_MODEL", "openai/gpt-oss-20b")  # must be a reasoning model
+model = os.environ.get("OPENAI_MODEL", "nvidia/nemotron-3-super-120b-a12b:free")  # must be a reasoning model
 
 question = """Here are the presentation letters of three candidates to a PhD programme.
 Rank the candidates from the most to the least recommended, in one line per candidate, with a one-sentence justification.
