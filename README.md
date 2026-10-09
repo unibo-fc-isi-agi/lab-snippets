@@ -57,12 +57,13 @@ Exercises build upon the examples (and exercises) listed before them, as detaile
 | 4 | [Validating Generative Software](https://unibo-fc-isi-agi.github.io/slides-module2/validating/) (`validating`) | example 1, example 1bis, exercise 1, exercise 2 | exercise 1 extends example 1 (or 1bis); exercise 2 tests the solution of `prompting` exercise 2 |
 | 5 | [Tools and Agents](https://unibo-fc-isi-agi.github.io/slides-module2/agents/) (`agents`) | example 1, example 1bis, example 2, example 3, exercise 1, exercise 2, exercise 3 | exercise 1 reuses `prompting` exercise 2 (pictures) and, optionally, `prompting` example 1 or 1bis (letter scoring); exercise 2 extends exercise 1; exercise 3 extends exercises 1 and 2 |
 | 6 | [Retrieval-Augmented Generation](https://unibo-fc-isi-agi.github.io/slides-module2/rag/) (`rag`) | example 1, example 2, example 2bis, example 3, example 4, example 4bis, example 5, exercise 1 | needs an embedding model (see below), and a Python whose `sqlite3` can load extensions (for `sqlite-vec`); exercise 1 (Q/A over the slides' PDFs) reuses `embeddings.py` and `vec.py` |
-| 7–8 | _Agentic Skills, Workflows and Agent Orchestration_ | _coming soon_ | |
+| 7 | [Agentic Skills](https://unibo-fc-isi-agi.github.io/slides-module2/skills/) (`skills`) | example 1, example 2, example 2bis, example 3, example 4, exercise 1 | example 1 holds skills (folders with a `SKILL.md`), used by examples 2, 2bis, 3, and by any harness (e.g. OpenClaw); example 2bis needs Python 3.11+ (`deepagents`); exercise 1 downloads a thesis (PDF) if none is given |
+| 8 | _Workflows and Agent Orchestration_ | _coming soon_ | |
 | 9 | [AI Governance 101](https://unibo-fc-isi-agi.github.io/slides-module2/governance/) (`governance`) | exercise 1, exercise 2 | exercise 1 runs `prompting` example 1 (or 1bis) with several models; exercise 2 builds on exercise 1 |
 
 ## Prepare the environment
 
-To run the snippets, you need __Python__ (3.10 or later) installed on your machine.
+To run the snippets, you need __Python__ (3.11 or later) installed on your machine.
 
 You also need [Poetry](https://python-poetry.org), a Python dependency manager.
 If that's not installed, you can install it by running the following command:

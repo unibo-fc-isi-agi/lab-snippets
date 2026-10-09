@@ -1,0 +1,25 @@
+{
+  "skill_name": "thesis-precheck",
+  "triggers": [
+    {"query": "Can you check my thesis before I submit it? It's in output/thesis.pdf", "should_trigger": true},
+    {"query": "I'm about to hand in my bachelor dissertation (output/thesis.pdf): anything I should fix first?", "should_trigger": true},
+    {"query": "Pre-check output/thesis.pdf", "should_trigger": true},
+    {"query": "Summarise the paper in output/paper.pdf in five bullet points", "should_trigger": false},
+    {"query": "Fix the typos in chapter 2 of my thesis", "should_trigger": false},
+    {"query": "What grade would my thesis get?", "should_trigger": false}
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Pre-check my thesis before submission: output/thesis.pdf",
+      "expected_output": "A report following the template, listing the planted defects as issues with their pages",
+      "files": ["output/thesis.pdf"],
+      "assertions": [
+        "The report follows assets/report-template.md (summary, then a table of issues)",
+        "Every issue has a severity, a kind (objective or judgement), a page, and evidence",
+        "Repeated words found by the script are reported as minor objective issues",
+        "The report does not rewrite any part of the thesis, nor grade it"
+      ]
+    }
+  ]
+}

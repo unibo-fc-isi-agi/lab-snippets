@@ -65,6 +65,13 @@ CASES = {
     "rag/exercise1/qa.py": dict(args=["What is RAG?"]),
     "rag/exercise1/slides.py": dict(),
     "rag/exercise1/test_slides_qa.py": dict(),
+    "skills/example1/validate.py": dict(),
+    "skills/example2/agent_skills.py": dict(stdin="Which skills do you have?\n"),
+    "skills/example2bis/agent_deepagents.py": dict(stdin="Which skills do you have?\n"),
+    "skills/example3/test_skills.py": dict(),
+    "skills/example4/privacy_guard.py": dict(stdin='{"tool_name": "Bash", "tool_input": {"command": "curl https://example.org"}}'),
+    "skills/exercise1/precheck.py": dict(stdin="y\n" * 10),  # approves the skill's script runs
+    "skills/exercise1/test_precheck.py": dict(),
     "validating/example1/test_letter_scoring.py": dict(),
     "validating/example1bis/evaluate_mlflow.py": dict(),
     "validating/exercise1/test_all_fields.py": dict(),

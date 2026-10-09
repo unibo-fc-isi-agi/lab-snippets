@@ -1,0 +1,9 @@
+// To be merged into ~/.openclaw/openclaw.json: makes OpenClaw find the skills of this example (cf. https://docs.openclaw.ai/tools/skills)
+{
+  skills: {
+    load: {
+      // absolute path of this folder, in YOUR clone of lab-snippets
+      extraDirs: ["/path/to/lab-snippets/snippets/lecture_skills/example1"],
+    },
+  },
+}
