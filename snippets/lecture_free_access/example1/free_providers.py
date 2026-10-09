@@ -13,7 +13,7 @@ from openai import OpenAI
 PROVIDERS = {
     "gemini": ("https://generativelanguage.googleapis.com/v1beta/openai/", "GEMINI_API_KEY"),
     "groq": ("https://api.groq.com/openai/v1", "GROQ_API_KEY"),
-    "github": ("https://models.github.ai/inference", "GITHUB_TOKEN"),
+    "cohere": ("https://api.cohere.ai/compatibility/v1", "COHERE_API_KEY"),
     "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
     "mistral": ("https://api.mistral.ai/v1", "MISTRAL_API_KEY"),
     "ollama": ("http://localhost:11434/v1", None),  # local, no key needed
