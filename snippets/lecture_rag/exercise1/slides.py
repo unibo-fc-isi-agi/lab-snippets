@@ -3,7 +3,7 @@ The corpus: the PDFs of this course's slides, as attached to the releases of its
 PDFs are downloaded once (and again only if they change, as told by their SHA-256 digests), then split into one chunk per slide (= PDF page).
 
 Run with: poetry run python -m snippets -l rag -x 1 [--tag TAG]   (then pick slides.py: prints the chunks of the slides, without indexing them)
-Configure via env vars: RAG_CACHE_DIR (default: .rag-cache/).
+Configure via env vars: RAG_CACHE_DIR (default: .rag-cache/), GITHUB_TOKEN (optional, see below).
 """
 import hashlib
 import json
@@ -16,7 +16,7 @@ from pypdf import PdfReader
 
 REPO = "unibo-fc-isi-agi/slides-module2"
 CACHE_DIR = Path(os.environ.get("RAG_CACHE_DIR", ".rag-cache"))
-
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")  # optional: any GitHub token raises the API's rate limit
 
 @dataclass(frozen=True)
 class Pdf:
@@ -42,10 +42,10 @@ def pdf_url(lecture: str, tag: str) -> str:
     return f"https://github.com/{REPO}/releases/download/{tag}/{lecture}_slides.pdf"
 
 
-# 1. which PDFs are in a release? (GitHub's REST API, no authentication needed for public repos, 60 requests/hour)
+# 1. which PDFs are in a release? (GitHub's REST API: no authentication needed for public repos, 60 requests/hour; 5,000 with a token)
 def release(tag: str = "latest") -> list[Pdf]:
     url = f"https://api.github.com/repos/{REPO}/releases/" + ("latest" if tag == "latest" else f"tags/{tag}")
-    with urllib.request.urlopen(url) as response:
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"Authorization": f"Bearer {GITHUB_TOKEN}"} if GITHUB_TOKEN else {})) as response:
         info = json.load(response)
     return [Pdf(asset["name"].removesuffix("_slides.pdf"), info["tag_name"], asset["digest"])
             for asset in info["assets"] if asset["name"].endswith("_slides.pdf")]

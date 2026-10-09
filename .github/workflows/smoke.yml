@@ -25,6 +25,7 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       ANTHROPIC_BASE_URL: http://localhost:11434
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # e.g. for the GitHub API calls of rag/exercise1/slides.py
       SMOKE_REPORT: smoke-report.md
     steps:
       - uses: actions/checkout@v5
