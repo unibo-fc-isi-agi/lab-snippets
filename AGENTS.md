@@ -31,6 +31,8 @@ The slides repo mounts this one as the git submodule `static/lab-snippets/`, and
 | `exercises` | `master` with each `exercise<ID>/` reduced to an `__init__.py` placeholder (docstring with a `TODO:` list, ending with "Put your solution here."), and no tests for them |
 
 - Write and fix solutions on `master` only.
+- Examples (and lecture-wide modules) must never import exercise solutions, of any lecture: on `exercises` they are missing.
+  Reuse examples instead.
 - Then `git checkout exercises && git merge master`, keeping the placeholders: drop solution files and
   their tests from the merge, and update a placeholder's TODO list if the exercise's text changed.
 - A new exercise needs: the solution + a test in `tests/test_<NAME>.py` + a `CASES` entry in `smoke/test_snippets.py` on `master`; a placeholder on `exercises`;

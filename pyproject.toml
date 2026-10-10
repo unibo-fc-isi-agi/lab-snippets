@@ -28,6 +28,8 @@ sqlite-vec = "^0.1.9"
 langchain-community = "^0.4.2"
 pypdf = "^6.19.0"
 deepagents = "^0.7.23"
+langgraph-checkpoint-sqlite = "^3.1.1"
+a2a-sdk = {extras = ["http-server"], version = "^1.2.2"}
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "*"
