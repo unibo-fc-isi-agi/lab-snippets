@@ -120,13 +120,34 @@ Pre-adoption checklist, for the __exact checkpoint__ (to be completed with the r
 - Committee members receive a short training on the assistant's limitations (Art. 4 AI Act), e.g. that it can be manipulated by
   instructions hidden in documents, and that scores are not grades.
 
+### Countermeasures against automation bias (Art. 14(4)(b) AI Act)
+
+- __Independent judgement first__: for a random 20% of applications, one committee member reads the letter and scores it
+  _before_ seeing the assistant's score; disagreements are discussed, and feed the test suites.
+- __Evidence, not verdicts__: the interface shows, for each satisfied criterion, the sentence of the letter supporting it;
+  criteria without supporting evidence count as not satisfied.
+- __No false certainty__: fields without a clear majority (self-consistency) are shown as _uncertain_, never pre-filled;
+  candidates are listed in alphabetical order, not ranked by score, until the committee has reviewed all of them
+  (to avoid the score becoming the most _salient_ piece of information).
+- __Friction for irreversible decisions__: a rejection requires a written motivation by a committee member, which cannot
+  be copied from the assistant's output.
+
+### Enveloping: what we adapt to the assistant, explicitly
+
+- The __checklist__ of letter criteria and the __schemas__ of extracted fields are published in the call for applications:
+  candidates know what is evaluated, and can contest it.
+- We do __not__ adapt the call to what the assistant handles well (e.g. we keep accepting scanned documents in any language,
+  and handle failures by hand), nor do we ask candidates to write "for the machine".
+
 ## 6. Monitoring
 
 - __Logged__ (Art. 12 and 26 AI Act; kept 6 months, or until the end of any appeal): model and checkpoint, prompts' version,
   each tool call with arguments and results, each extraction and score, each human override.
+- __Override rate__ of letter scores, per round and per committee member: _too many_ overrides suggest the assistant is unreliable,
+  _too few_ (e.g. below 2%, or zero disagreements in the independent-judgement sample) suggest __rubber-stamping__.
 - __Re-run__ the test suites (validating lecture, Exercises 1 and 2) before each admission round, and at every change of prompt, model, or provider.
 - __Re-assess this decision__ when: the provider deprecates or changes the model; the test suites fail; overrides of letter scores exceed
-  20% in a round; the AI Act's guidelines on high-risk classification (Art. 6(5)) or the Digital Omnibus change our obligations;
+  20% in a round, or fall below 2%; the AI Act's guidelines on high-risk classification (Art. 6(5)) or the Digital Omnibus change our obligations;
   the DPO or the University's policy require it; or, in any case, by the date at the top of this record.
 
 ## Consequences
