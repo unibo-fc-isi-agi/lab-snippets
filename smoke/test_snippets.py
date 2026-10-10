@@ -18,6 +18,7 @@ ROOT = Path(__file__).parent.parent
 MODEL = "nvidia/nemotron-3-super-120b-a12b:free"  # the snippets' default
 # questions are answerable from data/, as in the snippets' docstrings (agents may otherwise search on and on)
 QUESTION = "What time is it in Tokyo now?\n"  # for the REPLs: one question, then EOF (i.e. Ctrl+D) ends them
+REGULATIONS_QUESTION = "Is Mohammed Ali's degree enough to be admitted, according to the regulations?\n"
 
 # how to run each snippet: command-line args, stdin, a regex of `bad` output (some snippets report errors, then exit with 0),
 # or a reason to skip it. Snippets missing here make test_all_covered fail
@@ -76,6 +77,20 @@ CASES = {
     "validating/example1bis/evaluate_mlflow.py": dict(),
     "validating/exercise1/test_all_fields.py": dict(),
     "validating/exercise2/test_id_extraction.py": dict(),
+    "workflows/example1/admission_scratch.py": dict(stdin="y\n"),  # approves the proposal
+    "workflows/example1bis/admission_langgraph.py": dict(stdin="y\n"),
+    "workflows/example2/feedback_letters.py": dict(),
+    "workflows/example3/plan_execute.py": dict(stdin="Which candidate has the best recommendation letter?\n"),
+    "workflows/example4/supervisor.py": dict(stdin=REGULATIONS_QUESTION),
+    "workflows/example4bis/regulations_server.py": dict(skip="a server: run by supervisor_a2a.py"),
+    "workflows/example4bis/supervisor_a2a.py": dict(stdin=REGULATIONS_QUESTION, server=["snippets.lecture_workflows.example4bis.regulations_server"], port=9999),
+    "workflows/example5/observe.py": dict(stdin="y\n"),
+    "workflows/example6/test_admission.py": dict(),
+    "workflows/exercise1/bot.py": dict(stdin="y\n" * 8),  # approves every draft
+    "workflows/exercise1/test_email_bot.py": dict(),
+    "workflows/exercise2/email_bot_server.py": dict(skip="a server: tested in process by test_email_bot_a2a.py"),
+    "workflows/exercise2/helpdesk_client.py": dict(skip="needs email_bot_server.py, which asks a human (on its terminal) to approve replies"),
+    "workflows/exercise2/test_email_bot_a2a.py": dict(),
 }
 RATE_LIMITED = ("Error code: 429", "RateLimitError", "Too many requests", "Too Many Requests")
 ATTEMPTS = 3  # per snippet, if rate-limited

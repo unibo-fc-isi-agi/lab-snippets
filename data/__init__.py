@@ -10,7 +10,10 @@ Use the helpers below to locate files, rather than hard-coding their paths, e.g.
     data.passport("jean-dupont")            # the path of Jean Dupont's passport picture
     data.find_letter(sys.argv[1])           # a letter, given either a candidate's ID or a path
     data.regulations().read_text()          # the (fictional) regulations of the PhD programme, in Markdown
+    data.applications()["mario-rossi"]      # the e-mail address and the status of Mario Rossi's application
+    data.inbox()                            # the e-mails received by the admission office (sender, subject, body)
 """
+import json
 from pathlib import Path
 
 DIR = Path(__file__).parent  # i.e. <project root>/data/
@@ -47,3 +50,18 @@ def letters() -> list[Path]:
 def find_letter(name: str) -> Path:
     """Path of a letter, given either a candidate's ID (e.g. 'mario-rossi') or a path (e.g. 'data/letter-mario-rossi.txt')."""
     return letter(name) if name in CANDIDATES else Path(name)
+
+
+def applications() -> dict[str, dict]:
+    """The (fictional) applications' records of the admission office: candidate's ID -> their e-mail address, and status."""
+    return json.loads((DIR / "applications.json").read_text())
+
+
+def inbox() -> list[dict]:
+    """The e-mails received by the admission office (data/inbox/*.txt), as dicts with keys: id, sender, subject, body."""
+    emails = []
+    for path in sorted((DIR / "inbox").glob("*.txt")):
+        headers, _, body = path.read_text().partition("\n\n")  # headers, a blank line, then the body
+        fields = dict(line.split(": ", 1) for line in headers.splitlines())
+        emails.append({"id": path.stem, "sender": fields["From"], "subject": fields["Subject"], "body": body.strip()})
+    return emails
