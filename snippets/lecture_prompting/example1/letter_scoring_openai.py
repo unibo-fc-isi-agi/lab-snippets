@@ -18,7 +18,7 @@ client = OpenAI(base_url=base_url, api_key=api_key)
 
 # the system prompt: context and general instructions
 general_instructions = """
-You are assisting the admission commettee of University of Bologna PhD programmes.
+You are assisting the admission committee of University of Bologna PhD programmes.
 Your goal is to help assess recommendation letters for PhD applications.
 You'll be provided with the text of each letter,
 and you'll have to analyse it to extract structured information in JSON.
