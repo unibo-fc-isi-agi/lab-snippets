@@ -2,7 +2,7 @@
 Exercise 1: Q/A about the Slides of this Course.
 
 A RAG system answering questions about this course, citing the slides that support each answer.
-The slides are released as PDFs (one <lecture>_slides.pdf per lecture) at https://github.com/unibo-fc-isi-agi/slides-module2/releases
+The slides are released as PDFs (one <lecture>_slides.pdf per lecture) at https://github.com/unibo-fc-isi-iag/slides-module2/releases
 
 TODO:
 1. resolve a release (default: latest) via GitHub's API, and download its PDFs into a git-ignored cache,
