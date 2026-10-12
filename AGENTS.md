@@ -6,8 +6,8 @@ For layout, setup, runner usage, and the suggested order of snippets, read `READ
 ## What this is
 
 The runnable code (examples, exercises, running-example data) of **Module 2** of the course *Intelligent Agents*
-(University of Bologna), whose slides live in <https://github.com/unibo-fc-isi-agi/slides-module2>
-(published at <https://unibo-fc-isi-agi.github.io/slides-module2>).
+(University of Bologna), whose slides live in <https://github.com/unibo-fc-isi-iag/slides-module2>
+(published at <https://unibo-fc-isi-iag.github.io/slides-module2>).
 The slides repo mounts this one as the git submodule `static/lab-snippets/`, and **excerpts its files by line range**.
 
 ## Coupling with the slides

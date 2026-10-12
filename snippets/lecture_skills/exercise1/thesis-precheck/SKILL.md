@@ -7,7 +7,7 @@ description: Pre-checks a thesis (bachelor's, master's, or PhD; as a PDF) before
 license: Apache-2.0
 compatibility: Requires Python 3 with pypdf (pip install pypdf).
 metadata:
-  author: AgI course
+  author: IAg course
   version: "1.0"
 ---
 

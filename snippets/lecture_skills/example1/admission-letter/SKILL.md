@@ -5,7 +5,7 @@ description: Drafts the letter informing a PhD candidate of the committee's deci
   draft, or prepare a letter or an e-mail to a candidate. Not for reviewing applications.
 license: Apache-2.0
 metadata:
-  author: AgI course
+  author: IAg course
   version: "1.0"
 ---
 

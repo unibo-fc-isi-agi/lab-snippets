@@ -23,7 +23,7 @@ def test_slides_metadata_and_url(monkeypatch):
     monkeypatch.setattr(slides, "PdfReader", lambda path: SimpleNamespace(pages=[SimpleNamespace(extract_text=lambda p=p: p) for p in pages]))
     chunks = slides.slides(Pdf("free-access", "2026.10.08", "sha256:x"), "whatever.pdf")
     assert [(s.lecture, s.page, s.title) for s in chunks] == [("free-access", 1, "Title 1"), ("free-access", 2, "Title 2")]  # no near-empty page
-    assert chunks[1].url == "https://github.com/unibo-fc-isi-agi/slides-module2/releases/download/2026.10.08/free-access_slides.pdf#page=2"
+    assert chunks[1].url == "https://github.com/unibo-fc-isi-iag/slides-module2/releases/download/2026.10.08/free-access_slides.pdf#page=2"
 
 
 def test_release(monkeypatch):

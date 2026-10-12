@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from pypdf import PdfReader
 
-REPO = "unibo-fc-isi-agi/slides-module2"
+REPO = "unibo-fc-isi-iag/slides-module2"
 CACHE_DIR = Path(os.environ.get("RAG_CACHE_DIR", ".rag-cache"))
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")  # optional: any GitHub token raises the API's rate limit
 
