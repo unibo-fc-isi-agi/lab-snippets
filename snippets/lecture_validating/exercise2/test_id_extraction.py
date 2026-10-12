@@ -34,15 +34,15 @@ def samples_of(picture: str) -> list[IDDocumentInfo]:
     return sample(data.DIR / picture, SAMPLES)
 
 
-# step 2: deterministic scorers, i.e. exact match for IDs and dates, normalised match for names (case, accents, order of names)
-def normalise_name(name: str) -> set[str]:
+# step 2: deterministic scorers, i.e. exact match for IDs and dates, normalised match for names and nationality (case, accents, order of words)
+def normalise_words(name: str) -> set[str]:
     """e.g. 'DUPONT Jean' -> {'jean', 'dupont'}"""
     return set(unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower().replace(",", " ").split())
 
 def correct(info: IDDocumentInfo, expected: dict, field: str) -> bool:
     actual = getattr(info, field)
     if field in {"name", "nationality"}:
-        return normalise_name(actual) == normalise_name(expected[field])
+        return normalise_words(actual) == normalise_words(expected[field])
     if field == "id_number":
         return actual.strip().upper() == expected[field]
     return actual == expected[field]  # dates: `date` objects on both sides, so the format does not matter

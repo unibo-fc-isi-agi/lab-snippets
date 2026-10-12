@@ -1,5 +1,5 @@
 from snippets.lecture_validating.exercise1.test_all_fields import TEST_CASES, matches, normalise
-from snippets.lecture_validating.exercise2.test_id_extraction import TEST_CASES as PASSPORTS, normalise_name
+from snippets.lecture_validating.exercise2.test_id_extraction import TEST_CASES as PASSPORTS, normalise_words
 
 
 def test_normalise():
@@ -20,5 +20,5 @@ def test_datasets_are_complete():
     assert all(set(case["expected"]) == {"name", "nationality", "date_of_birth", "id_number", "expiration_date", "legible"} for case in PASSPORTS)
 
 
-def test_normalise_name():
-    assert normalise_name("DUPONT, Jean") == normalise_name("Jean Dupont")
+def test_normalise_words():
+    assert normalise_words("DUPONT, Jean") == normalise_words("Jean Dupont")
