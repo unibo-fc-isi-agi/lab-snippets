@@ -27,7 +27,8 @@ i.e. __17.5M input + 2.5M output tokens per year__.
 __EU AI Act__ ([Reg. (EU) 2024/1689](https://eur-lex.europa.eu/eli/reg/2024/1689/oj)):
 - The system is __high-risk__: it is intended to be used "to determine access or admission" to educational institutions
   (Art. 6(2) and Annex III, point 3(a)). The Art. 6(3) derogation (merely "preparatory" tasks) is __not__ claimed:
-  scoring letters and comparing candidates materially influences the outcome, so claiming it would be hard to defend.
+  scoring letters and comparing candidates materially influences the outcome, so claiming it would be hard to defend;
+  and anyway, scoring candidates is __profiling__, which makes the system always high-risk (Art. 6(3), last subparagraph).
 - The University __builds__ the system on top of a general-purpose model, and puts it into service under its own name:
   it is both its __provider__ and its __deployer__ (Art. 3(3)-(4), Art. 25). Hence:
     + as provider: risk management (Art. 9), data governance (Art. 10), technical documentation (Art. 11), automatic logging (Art. 12),
@@ -62,16 +63,16 @@ without legal basis and guarantees: consistent with scores being suggestions, an
 
 | Option | Quality | Cost per year | Control | Compliance | Time-to-market |
 |---|---|---|---|---|---|
-| A. proprietary API (e.g. Claude Haiku 4.5) | high | ≈ $30 | low: model may change or be deprecated | DPA + transfer safeguards; data leaves the University | days |
-| B. open-weights model, hosted by an EU provider | medium-high | ≈ $1–10 | medium: pinned checkpoint, provider may drop it | DPA; data stays in the EU | days |
+| A. proprietary API (e.g. Claude Haiku 4.5) | high | ≈ $30 | low: snapshots can be pinned, but are retired by the vendor | DPA + transfer safeguards; data leaves the University | days |
+| B. open-weights model, hosted by an EU provider (e.g. Mistral La Plateforme, Scaleway, OVHcloud) | medium-high | ≈ $1–10 | medium: pinned checkpoint, provider may drop it | DPA; data stays in the EU | days |
 | C. open-weights model, on-premise (24 GB GPU workstation) | medium | ≈ €2.5k upfront + energy + maintenance | full | data never leaves the University | weeks |
 
 Break-even of C vs. B: with B costing at most ≈ $10/year at our volume, the GPU alone (≈ €2.5k) pays back after __centuries__;
 even option A pays back C only after ≈ 80 years. At our scale, __cost is not the deciding factor__: compliance and control are.
 
 __Decision__: __B__ for the pilot (A.Y. 2026/27), with an EU-hosted provider under a DPA, and __the same model__ runnable on-premise (C)
-via the University's HPC facilities, should the DPO object to B. Option A is discarded: it gives the least control over model changes,
-which would invalidate our tests at any time.
+via the University's HPC facilities, should the DPO object to B. Option A is discarded: pinned snapshots are __retired__ on the vendor's schedule, forcing
+re-validation at times we do not choose; and data would leave the University.
 
 ## 3. Model
 
@@ -143,6 +144,8 @@ Pre-adoption checklist, for the __exact checkpoint__ (to be completed with the r
 
 - __Logged__ (Art. 12 and 26 AI Act; kept 6 months, or until the end of any appeal): model and checkpoint, prompts' version,
   each tool call with arguments and results, each extraction and score, each human override.
+  Logs contain personal data, so GDPR storage limitation applies too: they are __retained__ until the appeal window closes plus 6 months
+  (at least 6 months overall, Art. 26(6) AI Act), then deleted, or pseudonymised for the test suites.
 - __Override rate__ of letter scores, per round and per committee member: _too many_ overrides suggest the assistant is unreliable,
   _too few_ (e.g. below 2%, or zero disagreements in the independent-judgement sample) suggest __rubber-stamping__.
 - __Re-run__ the test suites (validating lecture, Exercises 1 and 2) before each admission round, and at every change of prompt, model, or provider.
