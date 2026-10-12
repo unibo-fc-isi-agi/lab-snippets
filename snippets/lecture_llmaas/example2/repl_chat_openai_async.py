@@ -43,9 +43,9 @@ async def main() -> int:
                     chunk = item.choices[0].delta.content or ""  # "delta": the new piece of text
                     if not chunk:
                         continue
-                    chunk = chunk.replace("\n", "\nassistant> ")
-                    print(chunk, end="", flush=True)  # show it immediately
-                    answer_parts.append(chunk)
+                    shown = chunk.replace("\n", "\nassistant> ")  # prefix new lines, on screen only
+                    print(shown, end="", flush=True)  # show it immediately
+                    answer_parts.append(chunk)  # the raw text, for the history
             except Exception as exc:  # streams may fail midway too
                 print(f"\nerror> {exc}", flush=True)
                 continue
