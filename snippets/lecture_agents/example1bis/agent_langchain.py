@@ -6,6 +6,8 @@ Configure via env vars: OPENAI_BASE_URL, OPENAI_API_KEY, OPENAI_MODEL (must supp
 """
 import os
 from langchain.agents import create_agent
+from langchain.agents.middleware import ToolErrorMiddleware
+from langgraph.errors import GraphRecursionError
 from langchain_openai import ChatOpenAI
 from snippets.lecture_agents.simple_tools import instructions, tools
 
@@ -15,7 +17,10 @@ model = os.environ.get("OPENAI_MODEL", "nvidia/nemotron-3-super-120b-a12b:free")
 
 llm = ChatOpenAI(base_url=base_url, api_key=api_key, model=model)
 
-agent = create_agent(llm, tools=tools, system_prompt=instructions)  # tool definitions are derived from the functions
+# errors raised by tools (e.g. an unknown time zone) go back to the LLM as error messages, instead of crashing the run
+tool_errors = ToolErrorMiddleware(lambda error, request: f"Error: {error}" if isinstance(error, ValueError) else None)
+
+agent = create_agent(llm, tools=tools, system_prompt=instructions, middleware=[tool_errors])  # tools derived from functions
 
 
 def print_tool_calls(messages) -> None:  # shows which tools the agent called, and how
@@ -31,7 +36,11 @@ if __name__ == "__main__":
             messages.append(("user", input("You: ")))
         except (EOFError, KeyboardInterrupt):
             break
-        result = agent.invoke({"messages": messages}, {"recursion_limit": 20})  # runs the loop, up to 20 steps
+        try:
+            result = agent.invoke({"messages": messages}, {"recursion_limit": 20})  # 20 graph steps ≈ 10 model+tools rounds
+        except GraphRecursionError:
+            print("AI: step limit reached, sorry")
+            continue
         print_tool_calls(result["messages"][len(messages):])  # only the new messages
         messages = result["messages"]  # the whole history, including tool calls and results
         print(f"AI: {messages[-1].content}")
