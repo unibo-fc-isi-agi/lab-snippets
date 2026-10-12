@@ -14,7 +14,7 @@ import mlflow
 from mlflow.genai import scorer
 from mlflow.genai.judges import make_judge
 from snippets.lecture_validating.dataset import TEST_CASES, read_letter
-from snippets.lecture_prompting.example1bis.letter_scoring_langchain import score_letter, base_url
+from snippets.lecture_prompting.example1bis.letter_scoring_langchain import score_letter, base_url, api_key
 
 # 1. the dataset: "inputs" are passed to predict_fn, "expectations" to the scorers
 data = [dict(inputs=dict(letter_text=read_letter(c)), expectations=c["expectations"]) for c in TEST_CASES]
@@ -34,7 +34,8 @@ def names_and_email(outputs, expectations) -> bool:  # exact match
 def score_in_range(outputs, expectations) -> bool:  # tolerant match
     return expectations.get("min_score", 0) <= outputs["score"] <= expectations.get("max_score", 5)
 
-# 4. LLM-as-a-judge (the API key is read from OPENAI_API_KEY)
+# 4. LLM-as-a-judge (MLflow reads the API key from OPENAI_API_KEY: the same as the system under test, even if typed in)
+os.environ.setdefault("OPENAI_API_KEY", api_key)
 judge_options = dict(model=f"openai:/{os.environ.get('JUDGE_MODEL', 'google/gemma-4-31b-it:free')}", base_url=base_url,
                      feedback_value_type=Literal["yes", "no"], generate_rationale_first=True)
 
