@@ -1,3 +1,3 @@
 """
-Lecture: Retrieval-Augmented Generation (RAG). Slides: https://unibo-fc-isi-agi.github.io/slides-module2/rag/
+Lecture: Retrieval-Augmented Generation (RAG). Slides: https://unibo-fc-isi-iag.github.io/slides-module2/rag/
 """

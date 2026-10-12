@@ -4,18 +4,18 @@ This repository contains the code snippets (examples and exercises)
 for the course "Intelligent Agents" (module 2) at the University of Bologna,
 part of the Master's degree in Computer Science and Engineering.
 
-Slides are available at <https://unibo-fc-isi-agi.github.io/slides-module2>.
+Slides are available at <https://unibo-fc-isi-iag.github.io/slides-module2>.
 Each snippet corresponds to an example (or exercise) in the slides, with the same index.
 
 ## Branches: exercises vs. solutions
 
 | Branch | Contents | Who |
 |--------|----------|-----|
-| [`exercises`](https://github.com/unibo-fc-isi-agi/lab-snippets/tree/exercises) | examples, plus a placeholder (with a TODO list) for each exercise | __students__: clone this one, and put your solutions in the placeholders |
-| [`master`](https://github.com/unibo-fc-isi-agi/lab-snippets/tree/master) | examples, plus the (commented) __solutions__ of exercises, tested by CI | for checking your solution _after_ trying, and for the walkthroughs in the slides |
+| [`exercises`](https://github.com/unibo-fc-isi-iag/lab-snippets/tree/exercises) | examples, plus a placeholder (with a TODO list) for each exercise | __students__: clone this one, and put your solutions in the placeholders |
+| [`master`](https://github.com/unibo-fc-isi-iag/lab-snippets/tree/master) | examples, plus the (commented) __solutions__ of exercises, tested by CI | for checking your solution _after_ trying, and for the walkthroughs in the slides |
 
 ```bash
-git clone -b exercises https://github.com/unibo-fc-isi-agi/lab-snippets.git
+git clone -b exercises https://github.com/unibo-fc-isi-iag/lab-snippets.git
 ```
 
 Most snippets work on the course's __running example__: an assistant for the admission committee of a PhD programme,
@@ -50,16 +50,16 @@ Exercises build upon the examples (and exercises) listed before them, as detaile
 
 | # | Lecture (`NAME`) | Snippets, in order | Notes |
 |---|------------------|--------------------|-------|
-| 1 | [Generative AI 101](https://unibo-fc-isi-agi.github.io/slides-module2/genai/) | _none_ | |
-| 2 | [LLM-as-a-Service](https://unibo-fc-isi-agi.github.io/slides-module2/llmaas/) (`llmaas`) | example 1, example 2, example 1bis, exercise 1, exercise 2 | exercises 1 and 2 extend example 1 |
-| — | [Free Access to LLMs](https://unibo-fc-isi-agi.github.io/slides-module2/free-access/) (`free_access`) | example 1 | appendix: read it _before_ running any snippet, to get an API key (or a local model) |
-| 3 | [Prompt Engineering & Structured Outputs](https://unibo-fc-isi-agi.github.io/slides-module2/prompting/) (`prompting`) | example 1, example 1bis, exercise 1, example 2, example 3, exercise 2, example 4 | exercise 1 extends example 1bis |
-| 4 | [Validating Generative Software](https://unibo-fc-isi-agi.github.io/slides-module2/validating/) (`validating`) | example 1, example 1bis, exercise 1, exercise 2 | exercise 1 extends example 1 (or 1bis); exercise 2 tests the solution of `prompting` exercise 2 |
-| 5 | [Tools and Agents](https://unibo-fc-isi-agi.github.io/slides-module2/agents/) (`agents`) | example 1, example 1bis, example 2, example 3, exercise 1, exercise 2, exercise 3 | exercise 1 reuses `prompting` exercise 2 (pictures) and, optionally, `prompting` example 1 or 1bis (letter scoring); exercise 2 extends exercise 1; exercise 3 extends exercises 1 and 2 |
-| 6 | [Retrieval-Augmented Generation](https://unibo-fc-isi-agi.github.io/slides-module2/rag/) (`rag`) | example 1, example 2, example 2bis, example 3, example 4, example 4bis, example 5, exercise 1 | needs an embedding model (see below), and a Python whose `sqlite3` can load extensions (for `sqlite-vec`); exercise 1 (Q/A over the slides' PDFs) reuses `embeddings.py` and `vec.py` |
-| 7 | [Agentic Skills](https://unibo-fc-isi-agi.github.io/slides-module2/skills/) (`skills`) | example 1, example 2, example 2bis, example 3, example 4, exercise 1 | example 1 holds skills (folders with a `SKILL.md`), used by examples 2, 2bis, 3, and by any harness (e.g. OpenClaw); example 2bis needs Python 3.11+ (`deepagents`); exercise 1 downloads a thesis (PDF) if none is given |
-| 8 | [Workflows and Agent Orchestration](https://unibo-fc-isi-agi.github.io/slides-module2/workflows/) (`workflows`) | example 1, example 1bis, example 2, example 3, example 4, example 4bis, example 5, example 6, exercise 1, exercise 2 | examples 1, 1bis, 3, 5 need a vision model (transcripts), and reuse `prompting` example 1bis (letter scoring); example 4 and exercise 1 reuse `rag` example 2bis (needs an embedding model); example 4bis and exercise 2 run A2A servers (ports 9999 and 9998); exercise 1 answers the e-mails in `data/inbox/`; exercise 2 extends exercise 1 |
-| 9 | [AI Governance 101](https://unibo-fc-isi-agi.github.io/slides-module2/governance/) (`governance`) | exercise 1, exercise 2 | exercise 1 runs `prompting` example 1 (or 1bis) with several models; exercise 2 builds on exercise 1 |
+| 1 | [Generative AI 101](https://unibo-fc-isi-iag.github.io/slides-module2/genai/) | _none_ | |
+| 2 | [LLM-as-a-Service](https://unibo-fc-isi-iag.github.io/slides-module2/llmaas/) (`llmaas`) | example 1, example 2, example 1bis, exercise 1, exercise 2 | exercises 1 and 2 extend example 1 |
+| — | [Free Access to LLMs](https://unibo-fc-isi-iag.github.io/slides-module2/free-access/) (`free_access`) | example 1 | appendix: read it _before_ running any snippet, to get an API key (or a local model) |
+| 3 | [Prompt Engineering & Structured Outputs](https://unibo-fc-isi-iag.github.io/slides-module2/prompting/) (`prompting`) | example 1, example 1bis, exercise 1, example 2, example 3, exercise 2, example 4 | exercise 1 extends example 1bis |
+| 4 | [Validating Generative Software](https://unibo-fc-isi-iag.github.io/slides-module2/validating/) (`validating`) | example 1, example 1bis, exercise 1, exercise 2 | exercise 1 extends example 1 (or 1bis); exercise 2 tests the solution of `prompting` exercise 2 |
+| 5 | [Tools and Agents](https://unibo-fc-isi-iag.github.io/slides-module2/agents/) (`agents`) | example 1, example 1bis, example 2, example 3, exercise 1, exercise 2, exercise 3 | exercise 1 reuses `prompting` exercise 2 (pictures) and, optionally, `prompting` example 1 or 1bis (letter scoring); exercise 2 extends exercise 1; exercise 3 extends exercises 1 and 2 |
+| 6 | [Retrieval-Augmented Generation](https://unibo-fc-isi-iag.github.io/slides-module2/rag/) (`rag`) | example 1, example 2, example 2bis, example 3, example 4, example 4bis, example 5, exercise 1 | needs an embedding model (see below), and a Python whose `sqlite3` can load extensions (for `sqlite-vec`); exercise 1 (Q/A over the slides' PDFs) reuses `embeddings.py` and `vec.py` |
+| 7 | [Agentic Skills](https://unibo-fc-isi-iag.github.io/slides-module2/skills/) (`skills`) | example 1, example 2, example 2bis, example 3, example 4, exercise 1 | example 1 holds skills (folders with a `SKILL.md`), used by examples 2, 2bis, 3, and by any harness (e.g. OpenClaw); example 2bis needs Python 3.11+ (`deepagents`); exercise 1 downloads a thesis (PDF) if none is given |
+| 8 | [Workflows and Agent Orchestration](https://unibo-fc-isi-iag.github.io/slides-module2/workflows/) (`workflows`) | example 1, example 1bis, example 2, example 3, example 4, example 4bis, example 5, example 6, exercise 1, exercise 2 | examples 1, 1bis, 3, 5 need a vision model (transcripts), and reuse `prompting` example 1bis (letter scoring); example 4 and exercise 1 reuse `rag` example 2bis (needs an embedding model); example 4bis and exercise 2 run A2A servers (ports 9999 and 9998); exercise 1 answers the e-mails in `data/inbox/`; exercise 2 extends exercise 1 |
+| 9 | [AI Governance 101](https://unibo-fc-isi-iag.github.io/slides-module2/governance/) (`governance`) | exercise 1, exercise 2 | exercise 1 runs `prompting` example 1 (or 1bis) with several models; exercise 2 builds on exercise 1 |
 
 ## Prepare the environment
 

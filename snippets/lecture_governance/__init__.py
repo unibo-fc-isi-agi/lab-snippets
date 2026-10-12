@@ -1,3 +1,3 @@
 """
-Lecture: AI Governance 101. Slides: https://unibo-fc-isi-agi.github.io/slides-module2/governance/
+Lecture: AI Governance 101. Slides: https://unibo-fc-isi-iag.github.io/slides-module2/governance/
 """

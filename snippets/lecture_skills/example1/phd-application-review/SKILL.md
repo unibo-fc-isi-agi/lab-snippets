@@ -6,7 +6,7 @@ description: Reviews a candidate's application to the PhD programme (recommendat
   Not for writing letters to candidates (use admission-letter instead).
 license: Apache-2.0
 metadata:
-  author: AgI course
+  author: IAg course
   version: "1.0"
 ---
 
