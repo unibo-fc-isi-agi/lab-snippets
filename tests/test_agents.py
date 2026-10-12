@@ -13,6 +13,7 @@ import data
 from snippets.lecture_agents.exercise1 import committee
 from snippets.lecture_agents.exercise2 import decisions
 from snippets.lecture_agents.exercise2.agent_decisions import approval, run
+from snippets.lecture_agents.example1bis.agent_langchain import tool_errors
 from snippets.lecture_agents.exercise3.gateway import Gateway
 
 
@@ -78,6 +79,14 @@ def test_write_tools_need_approval(output_dir, decision, written):
     messages = asyncio.run(run(scripted_agent(), "Admit Mario Rossi", "thread", review=human))
     assert reviewed == ["record_decision"] and messages[-1].content == "Done."
     assert (output_dir / "decisions.csv").exists() == written
+
+
+def test_tool_errors_go_back_to_the_model():
+    call = dict(name="read_letter", args=dict(candidate="nobody"), id="call-1")
+    model = FakeModel(messages=iter([AIMessage("", tool_calls=[call]), AIMessage("No such candidate.")]))
+    agent = create_agent(model, tools=committee.tools, middleware=[tool_errors])
+    tool_message = agent.invoke({"messages": [("user", "Read nobody's letter")]})["messages"][-2]
+    assert tool_message.status == "error" and "Unknown candidate" in tool_message.content
 
 
 class FakeSession:  # a server behind the gateway, recording the calls it receives

@@ -63,7 +63,7 @@ class Gateway(FastMCP):
         return [tool.model_copy(update={"name": name}) for name, (_, tool) in self.routes.items()]
 
     async def call_tool(self, name: str, arguments: dict) -> CallToolResult:  # overrides FastMCP's own tools/call handler
-        host_session = id(self.get_context().session)
+        host_session = id(self.get_context().session)  # NB: stateless MCP (spec 2026-07-28) has no sessions: key on the caller's identity
         if name not in self.routes:
             result = error(f"Unknown tool: {name}")
         elif fnmatch(name, EXFILTRATING) and host_session in self.tainted:  # policy enforced HERE, whatever the host does

@@ -13,7 +13,7 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
-from snippets.lecture_agents.example1bis.agent_langchain import llm, print_tool_calls
+from snippets.lecture_agents.example1bis.agent_langchain import llm, print_tool_calls, tool_errors
 from snippets.lecture_agents.simple_tools import get_current_time
 from snippets.lecture_agents.exercise1 import committee
 from snippets.lecture_agents.exercise1.agent_committee import instructions as read_only_instructions
@@ -33,7 +33,7 @@ agent = create_agent(
     llm,
     tools=[*committee.tools, get_current_time, *decisions.tools],
     system_prompt=instructions,
-    middleware=[approval],
+    middleware=[approval, tool_errors],  # tool_errors: as in Example 1 bis
     checkpointer=InMemorySaver(),  # interrupted runs are saved, to be resumed after the human's decision
 )
 

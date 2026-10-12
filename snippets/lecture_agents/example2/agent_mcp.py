@@ -8,6 +8,7 @@ import asyncio
 import sys
 from langchain.agents import create_agent
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langgraph.errors import GraphRecursionError
 from snippets.lecture_agents.simple_tools import instructions
 from snippets.lecture_agents.example1bis.agent_langchain import llm, print_tool_calls
 
@@ -31,7 +32,11 @@ async def main():
             messages.append(("user", input("You: ")))
         except (EOFError, KeyboardInterrupt):
             break
-        result = await agent.ainvoke({"messages": messages}, {"recursion_limit": 20})  # async: MCP clients are async
+        try:
+            result = await agent.ainvoke({"messages": messages}, {"recursion_limit": 20})  # async: MCP clients are async
+        except GraphRecursionError:
+            print("AI: step limit reached, sorry")
+            continue
         print_tool_calls(result["messages"][len(messages):])
         messages = result["messages"]
         print(f"AI: {messages[-1].content}")
