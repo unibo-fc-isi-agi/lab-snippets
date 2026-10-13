@@ -51,7 +51,7 @@ Exercises build upon the examples (and exercises) listed before them, as detaile
 | # | Lecture (`NAME`) | Snippets, in order | Notes |
 |---|------------------|--------------------|-------|
 | 1 | [Generative AI 101](https://unibo-fc-isi-iag.github.io/slides-module2/genai/) | _none_ | |
-| 2 | [LLM-as-a-Service](https://unibo-fc-isi-iag.github.io/slides-module2/llmaas/) (`llmaas`) | example 1, example 2, example 1bis, exercise 1, exercise 2 | exercises 1 and 2 extend example 1 |
+| 2 | [LLM-as-a-Service](https://unibo-fc-isi-iag.github.io/slides-module2/llmaas/) (`llmaas`) | example 1, example 2, example 3, example 1bis, exercise 1, exercise 2 | exercises 1 and 2 extend example 1 |
 | — | [Free Access to LLMs](https://unibo-fc-isi-iag.github.io/slides-module2/free-access/) (`free_access`) | example 1 | appendix: read it _before_ running any snippet, to get an API key (or a local model) |
 | 3 | [Prompt Engineering & Structured Outputs](https://unibo-fc-isi-iag.github.io/slides-module2/prompting/) (`prompting`) | example 1, example 1bis, exercise 1, example 2, example 3, exercise 2, example 4 | exercise 1 extends example 1bis |
 | 4 | [Validating Generative Software](https://unibo-fc-isi-iag.github.io/slides-module2/validating/) (`validating`) | example 1, example 1bis, exercise 1, exercise 2 | exercise 1 extends example 1 (or 1bis); exercise 2 tests the solution of `prompting` exercise 2 |
