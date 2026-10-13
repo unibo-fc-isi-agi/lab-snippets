@@ -45,6 +45,8 @@ CASES = {
     "llmaas/example1/repl_chat_openai.py": dict(stdin="Hi!\n"),
     "llmaas/example1bis/repl_chat_anthropic.py": dict(stdin="Hi!\n", skip=None if os.environ.get("ANTHROPIC_BASE_URL") else "set ANTHROPIC_BASE_URL (e.g. Ollama)"),
     "llmaas/example2/repl_chat_openai_async.py": dict(stdin="Hi!\n", bad=r"assistant> *$"),  # an empty answer
+    "llmaas/example3/repl_chat_responses.py": dict(stdin="/attach data/passport-mario-rossi.png\nWhat is the name of this person?\n",
+                                                   bad=r"error>|assistant> *$"),
     "llmaas/exercise1/repl_chat_cached.py": dict(stdin="Hi!\nHi!\n"),  # the 2nd answer comes from the cache
     "llmaas/exercise2/repl_chat_retry.py": dict(stdin="Hi!\n"),
     "prompting/example1/letter_scoring_openai.py": dict(args=["mario-rossi"]),
